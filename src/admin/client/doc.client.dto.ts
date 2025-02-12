@@ -27,6 +27,12 @@ export class DocClientDTO
   @ApiProperty({ type: Boolean, name: 'isActivated' })
   isActivated: boolean;
 
+  @ApiProperty({ type: Number, name: 'nbrSubscription' })
+  nbrSubscription: number;
+  
+  @ApiProperty({ type: Number, name: 'nbrTransaction' })
+  nbrTransaction: number;
+
   @ApiProperty({
     type: String,
     name: 'fullname',

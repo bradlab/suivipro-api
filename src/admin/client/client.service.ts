@@ -36,6 +36,7 @@ export class ClientService implements IClientService {
       }
       if (!DataHelper.isEmpty(queryParam)) {
         return await this.dashboardRepository.clients.find({
+          relations: {subscriptions: true, transactions: true},
           where: { ...queryParam },
           order: { createdAt: 'DESC' },
         });
@@ -44,6 +45,7 @@ export class ClientService implements IClientService {
       return [];
     }
     return await this.dashboardRepository.clients.find({
+      relations: {subscriptions: true, transactions: true},
       order: { createdAt: 'DESC' },
     });
   }

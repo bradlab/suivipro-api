@@ -116,7 +116,6 @@ export class PrestationController {
    * @param limit Nombre d'prestations par page
    * @returns Une liste d'prestations paginées
    */
-  @Public()
   @Get()
   @ApiOperation({ summary: "Récupérer la liste des prestations d'un client" })
   @ApiResponse({
@@ -125,7 +124,7 @@ export class PrestationController {
   })
   async getAllAnnonces(@Query() param: PrestationQuery) {
     const prestations = await this.prestationService.fetchAll(param);
-    return prestations?.map((prestation) => PrestationFactory.getPrestation(prestation));
+    return prestations?.map((prestation) => PrestationFactory.getPrestation(prestation, false));
   }
 
   /**

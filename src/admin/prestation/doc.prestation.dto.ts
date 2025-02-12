@@ -14,6 +14,9 @@ export class DocPrestationDTO implements Partial<OPrestation> {
   @ApiProperty({ type: Number, name: 'price' })
   price: number;
 
+  @ApiProperty({ type: Number, name: 'nbrSubscription' })
+  nbrSubscription: number;
+
   @ApiProperty({ type: Boolean, name: 'isActivated' })
   isActivated: boolean;
 

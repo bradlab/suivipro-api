@@ -24,6 +24,8 @@ export interface OClient extends Partial<Omit<Client, 'subscriptions' | 'transac
   id: string;
   subscriptions?: OSubscription[];
   transactions?: OTransaction[];
+  nbrSubscription?: number;
+  nbrTransaction?: number;
 }
 
 export interface SignedClient extends OClient {

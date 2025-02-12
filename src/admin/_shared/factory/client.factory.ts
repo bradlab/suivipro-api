@@ -43,7 +43,7 @@ export abstract class ClientFactory {
     return client;
   }
 
-  static getClient(client: Client): OClient {
+  static getClient(client: Client, deep: boolean = true): OClient {
     if (client) {
       return {
         id: client.id,
@@ -54,9 +54,11 @@ export abstract class ClientFactory {
         country: client.country,
         logo: DataHelper.getFileLink(client.logo!),
         gps: client.gps,
-        subscriptions: SubscriptionFactory.getSubscriptions(client.subscriptions!),
-        transactions: TransactionFactory.getTransactions(client.transactions!),
+        subscriptions: deep ? SubscriptionFactory.getSubscriptions(client.subscriptions!) : [],
+        transactions: deep ? TransactionFactory.getTransactions(client.transactions!) : [],
         isActivated: client.isActivated,
+        nbrSubscription: client.subscriptions?.length,
+        nbrTransaction: client.transactions?.length,      
         createdAt: client.createdAt,
         updatedAt: client.updatedAt,
       };

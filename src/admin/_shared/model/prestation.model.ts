@@ -16,4 +16,5 @@ export class Prestation extends ITimestamp {
 export interface OPrestation extends Partial<Omit<Prestation, 'subscriptions'>> {
   user?: OStaff;
   subscriptions?: OSubscription[];
+  nbrSubscription?: number
 }

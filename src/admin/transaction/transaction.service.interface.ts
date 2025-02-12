@@ -7,7 +7,7 @@ import {
 import { ISubscription } from 'admin/_shared/model/subscription.model';
 import { Prestation } from 'admin/_shared/model/prestation.model';
 
-export interface IRevokeSubscribe {
+export interface IUnsubscribe {
   subscriptionID?: string;
 }
 
@@ -46,9 +46,9 @@ export abstract class ITransactionService {
     data: ISubscribePrestation,
   ): Promise<ISubscription>;
 
-  abstract revoke(
+  abstract unsubscribe(
     user: Staff,
-    data: IRevokeSubscribe,
+    data: IUnsubscribe,
   ): Promise<ISubscription>;
 
   abstract fetchAll(param: ISubscriptionQuery): Promise<Transaction[]>;

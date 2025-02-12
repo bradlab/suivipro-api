@@ -26,7 +26,7 @@ export abstract class PrestationFactory {
     return prestation;
   }
 
-  static getPrestation(prestation: Prestation): OPrestation {
+  static getPrestation(prestation: Prestation, deep: boolean = true): OPrestation {
     if (prestation) {
       return {
         id: prestation.id,
@@ -35,7 +35,8 @@ export abstract class PrestationFactory {
         price: prestation.price,
         isActivated: prestation.isActivated,
         images: DataHelper.getFileLinks(prestation.images!),
-        subscriptions: SubscriptionFactory.getSubscriptions(prestation.subscriptions),
+        subscriptions: deep ? SubscriptionFactory.getSubscriptions(prestation.subscriptions) : [],
+        nbrSubscription: prestation.subscriptions?.length,
         createdAt: prestation.createdAt,
         updatedAt: prestation.updatedAt,
       };

@@ -80,11 +80,11 @@ export class TransactionController {
     description: 'Révocation réussie',
     type: DocTransactionDTO,
   })
-  @Post('revoke/:id')
+  @Post('unsubscribe/:id')
   async deductPoints(
     @GetClient() client: Staff,
     @Param() {id}: IDParamDTO,
   ): Promise<OSubscription> {
-    return SubscriptionFactory.getSubscription(await this.transactionService.revoke(client, { subscriptionID: id }));
+    return SubscriptionFactory.getSubscription(await this.transactionService.unsubscribe(client, { subscriptionID: id }));
   }
 }

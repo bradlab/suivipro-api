@@ -13,7 +13,7 @@ import {
   Transaction,
   SubscriptionTypeEnum,
 } from '../_shared/model/transaction.model';
-import { IRevokeSubscribe, ISubscribePrestation, ISubscriptionQuery, ITransactionService } from './transaction.service.interface';
+import { IUnsubscribe, ISubscribePrestation, ISubscriptionQuery, ITransactionService } from './transaction.service.interface';
 import { TransactionFactory } from '../_shared/factory/transaction.factory';
 import { Staff } from '../_shared/model/staff.model';
 import { DataHelper } from 'adapter/helper/data.helper';
@@ -143,9 +143,9 @@ export class TransactionService extends ITransactionService {
    * @param data Données pour mettre à jour les points
    * @returns La transaction de points enregistrée
    */
-  async revoke(
+  async unsubscribe(
     user: Staff,
-    data: IRevokeSubscribe,
+    data: IUnsubscribe,
   ): Promise<ISubscription> {
     try {
       const { subscriptionID } = data;

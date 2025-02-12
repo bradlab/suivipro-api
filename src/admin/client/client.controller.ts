@@ -62,7 +62,7 @@ export class ClientController {
       param.ids = ids?.split(',');
     }
     const clients = await this.clientService.fetchAll(param);
-    return clients.map((client) => ClientFactory.getClient(client));
+    return clients.map((client) => ClientFactory.getClient(client, false));
   }
 
   // @HasPermission(RuleEnum.CAN_SHOW_CLIENT)
