@@ -11,7 +11,7 @@ import { DataHelper } from 'adapter/helper/data.helper';
 import { DeepQueryType, PartialDeep } from 'domain/types';
 import { VIn, VNot } from 'framework/orm.clauses';
 import { Staff } from '../_shared/model/staff.model';
-import { IStaffService, IUpdateClientDTO } from './staff.service.interface';
+import { BaseDashboardMetric, IStaffService, IUpdateClientDTO } from './staff.service.interface';
 import { IClientQuery } from 'admin/auth/auth.service.interface';
 import { IRegisterClientDTO } from 'admin/auth/auth.service.interface';
 import { IDashboardRepository } from '../_shared/dashboard.repository';
@@ -51,11 +51,31 @@ export class StaffService implements IStaffService {
     });
   }
 
+  async getMetric(): Promise<BaseDashboardMetric> {
+    try {
+      const subscriptions = await this.dashboardRepository.subscriptions.find({
+        where: {isActivated: true}
+      });
+      const clients = await this.dashboardRepository.clients.find();
+      const transactions = await this.dashboardRepository.transactions.find();
+      const prestations = await this.dashboardRepository.prestations.find();
+      return {
+        clients: clients.length,
+        subscriptions: subscriptions.length,
+        prestations: prestations.length,
+        transactions: transactions.length
+      }
+    } catch (error) {
+      this.logger.error(error, 'ERROR::StaffService.fetchAll');
+      throw error;
+    }
+  }
+
   async search(data: PartialDeep<Staff>): Promise<Staff> {
     try {
       return this.authService.search(data);
     } catch (error) {
-      this.logger.error(error, 'ERROR::ClientService.search');
+      this.logger.error(error, 'ERROR::StaffService.search');
       throw error;
     }
   }
@@ -82,7 +102,7 @@ export class StaffService implements IStaffService {
       );
       return client;
     } catch (error) {
-      this.logger.error(error, 'ERROR::ClientService.add');
+      this.logger.error(error, 'ERROR::StaffService.add');
       throw error;
     }
   }
@@ -120,7 +140,7 @@ export class StaffService implements IStaffService {
       }
       throw new NotFoundException('Client not found');
     } catch (error) {
-      this.logger.error(error.message, 'ERROR::ClientService.editCredential');
+      this.logger.error(error.message, 'ERROR::StaffService.editCredential');
 
       throw error;
     }
@@ -147,7 +167,7 @@ export class StaffService implements IStaffService {
       }
       throw new NotFoundException('Client not found');
     } catch (error) {
-      this.logger.error(error.message, 'ERROR::ClientService.editUser');
+      this.logger.error(error.message, 'ERROR::StaffService.editUser');
 
       throw error;
     }
@@ -167,7 +187,7 @@ export class StaffService implements IStaffService {
       }
       return false;
     } catch (error) {
-      this.logger.error(error, 'ERROR::ClientService.setState');
+      this.logger.error(error, 'ERROR::StaffService.setState');
       return false;
     }
   }
@@ -182,7 +202,7 @@ export class StaffService implements IStaffService {
       }
       return false;
     } catch (error) {
-      this.logger.error(error.message, 'ERROR::ClientService.remove');
+      this.logger.error(error.message, 'ERROR::StaffService.remove');
       throw error;
     }
   }
@@ -190,7 +210,7 @@ export class StaffService implements IStaffService {
     try {
       throw new NotImplementedException();
     } catch (error) {
-      this.logger.error(error.message, 'ERROR::ClientService.remove');
+      this.logger.error(error.message, 'ERROR::StaffService.remove');
       throw error;
     }
   }

@@ -15,6 +15,7 @@ import { IDashboardRepository } from '../_shared/dashboard.repository';
 import { ClientFactory } from 'admin/_shared/factory/client.factory';
 import { Client } from 'admin/_shared/model/client.model';
 import { Staff } from 'admin/_shared/model/staff.model';
+import { ISubscriptionQuery } from 'admin/transaction/transaction.service.interface';
 
 @Injectable()
 export class ClientService implements IClientService {
@@ -58,7 +59,7 @@ export class ClientService implements IClientService {
 
   async fetchOne(id: string): Promise<Client> {
     return await this.dashboardRepository.clients.findOne({
-      relations: { subscriptions: true },
+      relations: { subscriptions: {prestation: true}, transactions: {subscription: {prestation: true}} },
       where: { id },
     });
   }

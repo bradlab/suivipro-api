@@ -80,9 +80,11 @@ function getIntervalDates(
   if (inFuture) {
     switch (type) {
       case PeriodUnitEnum.MINUTE:
-        to.setMinutes(to.getMinutes() + interval);
+        to.setMinutes(to.getMinutes() + 30);
+        break;
       case PeriodUnitEnum.HOUR:
         to.setHours(to.getHours() + interval);
+        break;
       case PeriodUnitEnum.DAY:
         to.setDate(to.getDate() + interval);
         break;
@@ -100,8 +102,10 @@ function getIntervalDates(
     switch (type) {
       case PeriodUnitEnum.MINUTE:
         from.setMinutes(from.getMinutes() - interval);
+        break;
       case PeriodUnitEnum.HOUR:
         from.setHours(from.getHours() - interval);
+        break;
       case PeriodUnitEnum.DAY:
         from.setDate(from.getDate() - interval);
         break;

@@ -30,6 +30,9 @@ export class SubscriptionEntity extends ATimestamp implements ISubscription {
   startAt: Date;
 
   @Column({ nullable: true, type: 'timestamp with time zone' })
+  dueDate: Date;
+
+  @Column({ nullable: true, type: 'timestamp with time zone' })
   closedAt: Date;
 
   @ManyToOne(() => ClientEntity, (client) => client.subscriptions)

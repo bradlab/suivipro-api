@@ -4,6 +4,7 @@ import { DataHelper } from 'adapter/helper/data.helper';
 import { SubscriptionFactory } from './subscription.factory';
 import { Client, OClient } from '../model/client.model';
 import { ICreateClientDTO, IUpdateClientDTO } from 'admin/client/client.service.interface';
+import { TransactionFactory } from './transaction.factory';
 
 export abstract class ClientFactory {
   static create(data: ICreateClientDTO): Client {
@@ -53,7 +54,8 @@ export abstract class ClientFactory {
         country: client.country,
         logo: DataHelper.getFileLink(client.logo!),
         gps: client.gps,
-        stores: SubscriptionFactory.getSubscriptions(client.subscriptions!),
+        subscriptions: SubscriptionFactory.getSubscriptions(client.subscriptions!),
+        transactions: TransactionFactory.getTransactions(client.transactions!),
         isActivated: client.isActivated,
         createdAt: client.createdAt,
         updatedAt: client.updatedAt,

@@ -7,7 +7,16 @@ export interface IUpdateClientDTO extends Partial<ICreateStaffDTO> {
   id: string;
 }
 
+export interface BaseDashboardMetric {
+  clients: number;
+  subscriptions: number;
+  prestations: number;
+  transactions: number;
+}
+
 export abstract class IStaffService {
+  abstract getMetric(): Promise<BaseDashboardMetric>;
+
   abstract add(data: IRegisterClientDTO): Promise<Staff>;
 
   abstract fetchAll(param?: IClientQuery): Promise<Staff[]>;

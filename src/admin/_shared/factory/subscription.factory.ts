@@ -4,6 +4,8 @@ import { ICreateSubscriptionDTO } from '../../subscription/subscription.service.
 import { DataHelper } from '../../../_shared/adapter/helper/data.helper';
 import { ClientFactory } from './client.factory';
 import { PrestationFactory } from './prestation.factory';
+import { getIntervalDates } from 'util/date.helper';
+import { PeriodUnitEnum } from 'app/enum';
 
 export abstract class SubscriptionFactory {
   static create(data: ICreateSubscriptionDTO): ISubscription {
@@ -11,7 +13,9 @@ export abstract class SubscriptionFactory {
     subscription.client = data.client;
     subscription.prestation = data.prestation;
     subscription.type = data.type;
-    subscription.startAt = new Date();
+    const {from, to} = getIntervalDates(30, true, PeriodUnitEnum.MINUTE)
+    subscription.startAt = from;
+    subscription.dueDate = to;
 
     return subscription;
   }
@@ -20,6 +24,8 @@ export abstract class SubscriptionFactory {
     if (subscription) {
       return {
         id: subscription.id,
+        startAt: subscription.startAt,
+        dueDate: subscription.dueDate,
         closedAt: subscription.closedAt,
         isActivated: subscription.isActivated,
         prestation: PrestationFactory.getPrestation(subscription.prestation!),

@@ -25,7 +25,7 @@ import {
 import { diskStorage } from 'multer';
 import { DataGenerator } from 'domain/generator/data.generator';
 import { IDParamDTO, IDsParamDTO } from 'adapter/param.dto';
-import { IStaffService } from './staff.service.interface';
+import { BaseDashboardMetric, IStaffService } from './staff.service.interface';
 import {
   ClientQuerDTO,
   RegisterStaffDTO,
@@ -34,7 +34,7 @@ import {
 } from './staff.input.dto';
 import { Staff, OStaff } from '../_shared/model/staff.model';
 import { StaffFactory } from '../_shared/factory/staff.factory';
-import { DocStaffDTO } from './doc.staff.dto';
+import { DocDashboardMetricDTO, DocStaffDTO } from './doc.staff.dto';
 import { GetClient } from '../_shared/decorator';
 import { StaffGuard } from '../_shared/guard/auth.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -61,6 +61,17 @@ export class StaffController {
     }
     const clients = await this.staffService.fetchAll(param);
     return clients.map((client) => StaffFactory.getClient(client));
+  }
+
+  @Get('metric')
+  @ApiOperation({
+    summary: 'Clients list',
+    description: 'Fetch all clients in the DB',
+  })
+  @ApiResponse({ type: DocDashboardMetricDTO, isArray: true })
+  async metric(): Promise<BaseDashboardMetric> {
+    
+    return await this.staffService.getMetric();
   }
 
   // @HasPermission(RuleEnum.CAN_SHOW_CLIENT)

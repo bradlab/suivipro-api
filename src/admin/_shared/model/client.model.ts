@@ -1,5 +1,4 @@
-import { Person } from 'domain/interface/person.model';
-import { Transaction } from './transaction.model';
+import { OTransaction, Transaction } from './transaction.model';
 import { OSubscription, ISubscription } from './subscription.model';
 import { IPosition, ITimestamp } from 'domain/interface';
 
@@ -21,9 +20,10 @@ export class Client extends ITimestamp {
   transactions?: Transaction[];
 }
 
-export interface OClient extends Partial<Omit<Client, 'stores'>> {
+export interface OClient extends Partial<Omit<Client, 'subscriptions' | 'transactions'>> {
   id: string;
-  stores?: OSubscription[];
+  subscriptions?: OSubscription[];
+  transactions?: OTransaction[];
 }
 
 export interface SignedClient extends OClient {

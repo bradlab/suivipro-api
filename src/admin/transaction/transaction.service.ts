@@ -182,7 +182,6 @@ export class TransactionService extends ITransactionService {
       const { prestationID, clientID, type } = data;
       const client = await this.fetchOneClient(clientID!);
       const prestation = await this.prestationService.fetchOne(prestationID!);
-      console.log('DATA ======== SUB', {client, prestation})
       if (client && prestation) {
         const existedSubscription = await this.marketRepository.subscriptions.findOne({
           relations: {client: true, prestation: true},

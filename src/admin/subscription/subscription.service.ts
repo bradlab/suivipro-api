@@ -33,6 +33,15 @@ export class SubscriptionService {
         relations: { client: true, prestation: true,  },
         where: { ...queryParam },
       });
+      // subscriptions.map((sub) => {
+      //   if (!sub.dueDate) {
+      //     const {from, to} = getIntervalDates(1, true, PeriodUnitEnum.DAY);
+      //     console.log('FROM =========', {from, to})
+      //     sub.dueDate = to;
+      //   }
+      // });
+      // await this.dashboardRepository.subscriptions.updateMany(subscriptions);
+      // return subscriptions;
     } catch (error) {
       this.logger.error(error, 'ERROR::SubscriptionService.fetchAll');
       throw error;

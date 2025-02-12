@@ -10,6 +10,7 @@ export class ISubscription extends ITimestamp {
   client?: Client;
   prestation?: Prestation;
   startAt: Date;
+  dueDate?: Date;
   closedAt?: Date;
   transactions?: Transaction[];
 }
