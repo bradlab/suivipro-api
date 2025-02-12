@@ -38,8 +38,8 @@ import {
 import { RegisterClientDTO } from './auth.input.dto';
 import { BaseConfig } from 'config/base.config';
 import { Public } from 'adapter/decorator';
-import { ClientGuard } from 'admin/_shared/guard/auth.guard';
-import { DocSignedClientDTO, DocClientDTO } from './doc.client.dto';
+import { StaffGuard } from 'admin/_shared/guard/auth.guard';
+import { DocSignedStaffDTO, DocStaffDTO } from 'admin/manager/doc.staff.dto';
 
 @ApiTags('User Authentication')
 @Controller('auth')
@@ -73,11 +73,11 @@ export class AuthController {
   }
 
   @ApiBearerAuth()
-  @UseGuards(ClientGuard)
+  @UseGuards(StaffGuard)
   @Get('token.signin')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Token connexion' })
-  @ApiResponse({ type: DocSignedClientDTO })
+  @ApiResponse({ type: DocSignedStaffDTO })
   async signinByToken(@GetClient() client: Staff): Promise<OStaff> {
     return StaffFactory.getClient(client);
   }
@@ -102,7 +102,7 @@ export class AuthController {
       fileFilter: BaseConfig.imageFileFilter,
     }),
   )
-  @ApiResponse({ type: DocClientDTO })
+  @ApiResponse({ type: DocStaffDTO })
   async create(
     @Body() data: RegisterClientDTO,
     @UploadedFile() file: any,
@@ -122,7 +122,7 @@ export class AuthController {
   @ApiConsumes('multipart/form-data', 'application/json')
   @ApiOperation({ summary: 'User connexion endpoint' })
   @ApiBody({ type: SigninAccoutDTO })
-  @ApiResponse({ type: DocSignedClientDTO })
+  @ApiResponse({ type: DocSignedStaffDTO })
   async signin(@Body() data: SigninAccoutDTO): Promise<SignedStaff> {
     const { accessToken, user } = await this.authService.signin(data);
     if (user) {

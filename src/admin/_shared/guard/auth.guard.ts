@@ -23,7 +23,7 @@ export const _extractTokenFromHeader = (
 };
 
 @Injectable()
-export class ClientGuard implements CanActivate {
+export class StaffGuard implements CanActivate {
   private readonly logger = new Logger();
 
   constructor(
@@ -70,7 +70,6 @@ export class ClientGuard implements CanActivate {
       }
       return false;
     }
-    return true;
   }
 
   private async _getPayload(token: string): Promise<IJwtPayload> {

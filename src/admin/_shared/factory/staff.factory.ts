@@ -22,12 +22,7 @@ export abstract class StaffFactory {
       data.fullname ?? DataHelper.getFullName(data.firstname, data.lastname);
     client.address = data.address;
     client.sex = data.sex;
-    client.gps = data.gps;
     client.country = data.country;
-    if (data.isMerchant) {
-      client.isMerchant = String(data.isMerchant) == 'true';
-    }
-    client.isMerchant = data.isMerchant;
     client.password = await HashFactory.hashPwd(data.password);
     return client;
   }
@@ -39,7 +34,6 @@ export abstract class StaffFactory {
     client.address = data.address ?? client.address;
     client.country = data.country ?? client.country;
     client.avatar = data.avatar ?? client.avatar;
-    client.isMerchant = data.isMerchant ?? client.isMerchant;
     client.username = data.username ?? client.username;
     if (data.firstname || data.lastname) {
       client.fullname = DataHelper.getFullName(
@@ -48,7 +42,6 @@ export abstract class StaffFactory {
       );
     }
     client.sex = data.sex ?? client.sex;
-    client.gps = data.gps ?? client.gps;
     if (all) {
       client.email = data.email ?? client.email;
       client.phone = data.phone ?? data.phone;
@@ -73,13 +66,10 @@ export abstract class StaffFactory {
         lastname: client.lastname,
         fullname: client.fullname,
         address: client.address,
-        isMerchant: client.isMerchant,
-        points: client.points,
         country: client.country,
-        logo: DataHelper.getFileLink(client.logo!),
+        avatar: DataHelper.getFileLink(client.avatar!),
         username: client.username,
         sex: client.sex,
-        gps: client.gps,
         maritalStatus: client.maritalStatus,
         isActivated: client.isActivated,
         createdAt: client.createdAt,

@@ -15,12 +15,12 @@ import { GetClient } from '../_shared/decorator';
 import { Staff, OStaff } from '../_shared/model/staff.model';
 import { StaffFactory } from 'admin/_shared/factory/staff.factory';
 import { TransactionFactory } from 'admin/_shared/factory/point.factory';
-import { ClientGuard } from 'admin/_shared/guard/auth.guard';
+import { StaffGuard } from 'admin/_shared/guard/auth.guard';
 import { DocStaffDTO } from 'admin/manager/doc.staff.dto';
 
 @ApiTags('Transactions Management')
 @ApiBearerAuth()
-@UseGuards(ClientGuard)
+@UseGuards(StaffGuard)
 @Controller('transactions')
 export class TransactionController {
   constructor(private readonly pointService: IPointService) {}
@@ -83,30 +83,5 @@ export class TransactionController {
     if (!client.id) return [];
     const transactions = await this.pointService.fetchAll(client.id);
     return TransactionFactory.getTransactions(transactions);
-  }
-
-  @ApiOperation({ summary: 'Obtenir le solde actuel de points du client' })
-  @ApiParam({
-    name: 'clientID',
-    description: 'ID du client non marchand',
-    type: String,
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Solde de points récupéré',
-    type: Number,
-  })
-  @Get('balance')
-  async getCurrentPoints(
-    @GetClient() client: Staff,
-    // @Param('clientID', ParseUUIDPipe) clientID: string,
-  ): Promise<Partial<Staff | undefined>> {
-    if (client) {
-      return {
-        points: client.points,
-        bonus: client.bonus,
-      }
-    }
-    // return this.pointService.getCurrentPoints(client.id);
   }
 }

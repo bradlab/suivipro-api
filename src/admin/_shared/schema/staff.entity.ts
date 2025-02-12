@@ -42,15 +42,6 @@ export class StaffEntity extends ATimestamp implements Staff {
   @Column({ nullable: true })
   address?: string;
 
-  @Column({ type: 'simple-json', nullable: true })
-  gps?: IPosition;
-
-  @Column({ nullable: true, default: 0 })
-  points?: number;
-
-  @Column({ nullable: true, default: 0 })
-  bonus?: number;
-
   @Column({ nullable: true, enum: SexEnum })
   sex?: SexEnum;
 
@@ -66,7 +57,4 @@ export class StaffEntity extends ATimestamp implements Staff {
 
   @Column({ nullable: true, default: true })
   isActivated?: boolean;
-
-  @Column({ nullable: true, default: false })
-  isMerchant?: boolean;
 }
