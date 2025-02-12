@@ -1,28 +1,22 @@
-import { Prestation } from '../_shared/model/annonce.model';
+import { Prestation } from '../_shared/model/prestation.model';
 import { Staff } from '../_shared/model/staff.model';
-import { ISubscription } from '../_shared/model/subscription.model';
 
-export interface ICreateAnnonceDTO {
-  title?: string;
+export interface ICreatePrestationDTO {
+  name?: string;
   description?: string;
-  quantity: number;
   images: string[];
-  tags: string[]; // Tableau de tags
   price: number;
-  client?: Staff;
-  storeID?: string;
-  store?: ISubscription;
 }
 
-export interface IAnnonceQuery {
+export interface IPrestationQuery {
   page?: number;
   limit?: number;
   tags?: string[];
-  storeID?: string;
+  subscriptionID?: string;
   clientID?: string;
 }
 
-export interface IUpdateAnnonceDTO extends Partial<ICreateAnnonceDTO> {
+export interface IUpdatePrestationDTO extends Partial<ICreatePrestationDTO> {
   id: string;
   keptImages?: string[];
 }
@@ -34,8 +28,8 @@ export abstract class IPrestationService {
    * @param clientId ID du client
    * @returns L'annonce créée
    */
-  abstract add(client: Staff, data: ICreateAnnonceDTO): Promise<Prestation>;
-  abstract bulk(client: Staff, data: ICreateAnnonceDTO[]): Promise<Prestation[]>;
+  abstract add(client: Staff, data: ICreatePrestationDTO): Promise<Prestation>;
+  abstract bulk(client: Staff, data: ICreatePrestationDTO[]): Promise<Prestation[]>;
 
   /**
    * Récupère toutes les annonces avec pagination
@@ -43,10 +37,10 @@ export abstract class IPrestationService {
    * @param limit Limite d'éléments par page (défaut: 10)
    * @returns Une liste d'annonces
    */
-  abstract fetchAll(param?: IAnnonceQuery): Promise<Prestation[]>;
+  abstract fetchAll(param?: IPrestationQuery): Promise<Prestation[]>;
   abstract fetchClientOwn(
     client: Staff,
-    param?: IAnnonceQuery,
+    param?: IPrestationQuery,
   ): Promise<Prestation[]>;
 
   /**
@@ -62,7 +56,7 @@ export abstract class IPrestationService {
    * @param data Données partiellement mises à jour (Partial<ICreateAnnonceDTO>)
    * @returns L'annonce modifiée
    */
-  abstract edit(data: Partial<ICreateAnnonceDTO>): Promise<Prestation>;
+  abstract edit(data: Partial<ICreatePrestationDTO>): Promise<Prestation>;
 
   /**
    * Supprime une annonce par son ID

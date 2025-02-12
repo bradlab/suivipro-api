@@ -10,11 +10,11 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CustomValidationPipe } from 'adapter/pipe/custom-validator.pipe';
 import { SeedsModule } from './_seeder/seeds.module';
-import { MarketModule } from 'admin/dashboard.module';
+import { DashboardModule } from 'admin/dashboard.module';
 // import { AdminModule } from './admin/admin.module';
 
 @Module({
-  imports: [MarketModule],
+  imports: [DashboardModule],
   controllers: [AppController],
   providers: [AppService],
 })

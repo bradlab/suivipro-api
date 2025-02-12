@@ -5,12 +5,13 @@ import {
   Get,
   Body,
   UseGuards,
+  Param,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiParam, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
-import { DocTransactionDTO } from './doc.point.dto';
-import { PayAnnonceDTO, UpdatePointDTO } from './point.input.dto';
+import { DocTransactionDTO } from './doc.transaction.dto';
+import { PayAnnonceDTO, SubscribeClientDTO } from './point.input.dto';
 import { OTransaction } from '../_shared/model/transaction.model';
-import { IPointService } from './point.service.interface';
+import { ITransactionService } from './point.service.interface';
 import { GetClient } from '../_shared/decorator';
 import { Staff, OStaff } from '../_shared/model/staff.model';
 import { StaffFactory } from 'admin/_shared/factory/staff.factory';
@@ -19,18 +20,21 @@ import { StaffGuard } from 'admin/_shared/guard/auth.guard';
 import { DocStaffDTO } from 'admin/manager/doc.staff.dto';
 import { OClient } from 'admin/_shared/model/client.model';
 import { ClientFactory } from 'admin/_shared/factory/client.factory';
+import { SubscriptionFactory } from 'admin/_shared/factory/subscription.factory';
+import { IDParamDTO } from 'adapter/param.dto';
+import { OSubscription } from 'admin/_shared/model/subscription.model';
 
 @ApiTags('Transactions Management')
 @ApiBearerAuth()
 @UseGuards(StaffGuard)
 @Controller('transactions')
 export class TransactionController {
-  constructor(private readonly pointService: IPointService) {}
+  constructor(private readonly pointService: ITransactionService) {}
 
   @Post('bulk.add')
   async addBulkPoints(
     @GetClient() client: Staff,
-    @Body() data: UpdatePointDTO[],
+    @Body() data: SubscribeClientDTO[],
   ): Promise<OTransaction[]> {
     return TransactionFactory.getTransactions(await this.pointService.addBulk(client, data));
   }
@@ -38,7 +42,7 @@ export class TransactionController {
   @Post('bulk.deduct')
   async deductBulkPoints(
     @GetClient() client: Staff,
-    @Body() data: UpdatePointDTO[],
+    @Body() data: SubscribeClientDTO[],
   ): Promise<OTransaction[]> {
     return TransactionFactory.getTransactions(await this.pointService.deductBulk(client, data));
   }
@@ -52,7 +56,7 @@ export class TransactionController {
   @Post('subscribe')
   async subscribe(
     @GetClient() client: Staff,
-    @Body() data: PayAnnonceDTO,
+    @Body() data: SubscribeClientDTO,
   ): Promise<OClient> {
     return ClientFactory.getClient(await this.pointService.subscribe(client, data));
   }
@@ -63,12 +67,12 @@ export class TransactionController {
     description: 'Révocation réussie',
     type: DocTransactionDTO,
   })
-  @Post('revoke')
+  @Post('revoke/:id')
   async deductPoints(
     @GetClient() client: Staff,
-    @Body() data: UpdatePointDTO,
-  ): Promise<OTransaction> {
-    return TransactionFactory.getTransaction(await this.pointService.revoke(client, { ...data, clientID: client.id }));
+    @Param() {id}: IDParamDTO,
+  ): Promise<OSubscription> {
+    return SubscriptionFactory.getSubscription(await this.pointService.revoke(client, { subscriptionID: id }));
   }
 
   @ApiOperation({ summary: 'Obtenir l’historique des transactions des abonnements' })

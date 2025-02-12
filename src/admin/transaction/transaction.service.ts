@@ -12,33 +12,28 @@ import {
   Transaction,
   TransactionTypeEnum,
 } from '../_shared/model/transaction.model';
-import { IPointService, IUpdatePointDTO } from './point.service.interface';
+import { IRevokeSubscribe, ISubscribePrestation, ITransactionService } from './point.service.interface';
 import { TransactionFactory } from '../_shared/factory/transaction.factory';
 import { Staff } from '../_shared/model/staff.model';
 import { DataHelper } from 'adapter/helper/data.helper';
 import { Client } from 'admin/_shared/model/client.model';
+import { ISubscription } from 'admin/_shared/model/subscription.model';
+import { IPrestationService } from 'admin/prestation/prestation.service.interface';
+import { SubscriptionFactory } from 'admin/_shared/factory/subscription.factory';
 
 @Injectable()
-export class TransactionService extends IPointService implements OnApplicationBootstrap {
+export class TransactionService extends ITransactionService {
   private readonly logger = new Logger();
-  constructor(private readonly marketRepository: IDashboardRepository) {
+  constructor(
+    private readonly marketRepository: IDashboardRepository,
+    private readonly prestationService: IPrestationService
+  ) {
     super();
   }
-  async onApplicationBootstrap() {
-    // const trans = await this.marketRepository.points.find({
-    //   order: { createdAt: 'DESC' },
-    // });
 
-    // if (DataHelper.isNotEmptyArray(trans)) {
-    //   trans.map((t => {
-    //    // t.createdAt = generateRandomDate('2024-11-01', '2024-11-28');
-    //    // t.updatedAt = t.createdAt;
-    //    t.updatedAt = generateRandomDate(t.createdAt.toISOString(), '2024-11-29')
-    //    t.type = TransactionTypeEnum.CREDIT;
-    //   }));
-
-    //   await this.marketRepository.points.updateMany(trans);
-    // }
+  async fetchOneClient(id: string) {
+    if (id)
+    return await this.marketRepository.clients.findOne({where: {id}})
   }
 
   /**
@@ -79,31 +74,30 @@ export class TransactionService extends IPointService implements OnApplicationBo
    * @param data Données pour mettre à jour les points
    * @returns La transaction de points enregistrée
    */
-  async add(client: Staff, data: IUpdatePointDTO): Promise<Transaction> {
+  async add(user: Staff, data: ISubscribePrestation): Promise<Transaction> {
     try {
-      if (!client) throw new NotFoundException('Client not found');
+      if (!user) throw new NotFoundException('Client not found');
 
       // Mise à jour du solde de points
       
       // Enregistrement de la transaction
-      data.client = client;
-      data.type = TransactionTypeEnum.AUTOMATIC;
+      // data.client = user;
       const transaction = await this.marketRepository.transactions.create(
         TransactionFactory.create(data),
       );
       if (transaction) {
         // client.points! += data.points;
-        await this.marketRepository.users.update(client);
+        await this.marketRepository.users.update(user);
         return transaction;
       }
       return transaction;
     } catch (error) {
-      this.logger.error(error, 'ERROR::PointService.addPoints');
+      this.logger.error(error, 'ERROR::TransactionService.addPoints');
       throw error;
     }
   }
 
-  async addBulk(user: Staff, datum: IUpdatePointDTO[]): Promise<Transaction[]> {
+  async addBulk(user: Staff, datum: ISubscribePrestation[]): Promise<Transaction[]> {
     try {
       if (!user) throw new NotFoundException('Client not found');
 
@@ -124,37 +118,32 @@ export class TransactionService extends IPointService implements OnApplicationBo
       }
       return [];
     } catch (error) {
-      this.logger.error(error, 'ERROR::PointService.addPoints');
+      this.logger.error(error, 'ERROR::TransactionService.addPoints');
       throw error;
     }
   }
 
-  async deductBulk(client: Staff, datum: IUpdatePointDTO[]): Promise<Transaction[]> {
+  async deductBulk(user: Staff, datum: ISubscribePrestation[]): Promise<Transaction[]> {
     try {
-      if (!client) throw new NotFoundException('Client not found');
+      if (!user) throw new NotFoundException('Client not found');
 
       const transactions: Transaction[] = [];
-      let balance = 0 ;
       for (const data of datum) {
-        if (data.points && data.points < balance) {
-          data.client = client;
-          data.type = TransactionTypeEnum.MANUAL;
+        const { clientID, prestationID } = data;
+        data.client = await this.fetchOneClient(clientID!);
+        data.prestation = await this.prestationService.fetchOne(prestationID!);
+        if (data.client && data.prestation) {
           const transaction = TransactionFactory.create(data);
           transactions.push(transaction);
-          balance -= data.points;
         }
       }
       if (DataHelper.isNotEmptyArray(transactions)) {
         const points = await this.marketRepository.transactions.createMany(transactions);
-        // Enregistrement de la transaction
-        // client.points = balance;
-        // Mise à jour du solde de points
-        await this.marketRepository.users.update(client);
         return points;
       }
       return [];
     } catch (error) {
-      this.logger.error(error, 'ERROR::PointService.addPoints');
+      this.logger.error(error, 'ERROR::TransactionService.addPoints');
       throw error;
     }
   }
@@ -165,102 +154,79 @@ export class TransactionService extends IPointService implements OnApplicationBo
    * @returns La transaction de points enregistrée
    */
   async revoke(
-    client: Staff,
-    data: IUpdatePointDTO,
-  ): Promise<Transaction> {
+    user: Staff,
+    data: IRevokeSubscribe,
+  ): Promise<ISubscription> {
     try {
-      const { annonceID, points } = data;
-      if (!client) throw new NotFoundException('Client not found');
+      const { subscriptionID } = data;
+      const subscription = await this.marketRepository.subscriptions.findOne({where: {id: subscriptionID}});
+      if (!subscription) throw new NotFoundException('subscription not found');
 
       // Vérifie si une transaction existe déjà pour cette annonce et ce client
-      if (annonceID) {
+      if (subscriptionID) {
         const existingTransaction = await this.marketRepository.transactions.findOne({
           where: {
-            client,
-            subscription: { id: annonceID },
-            type: TransactionTypeEnum.MANUAL,
+            subscription: { id: subscriptionID },
+            isActivated: true,
           },
         });
         if (existingTransaction) {
-          return existingTransaction; // Accès autorisé sans frais supplémentaires
+          existingTransaction.isActivated = false;
+          subscription.closedAt = new Date();
+          await this.marketRepository.transactions.update(existingTransaction);
+          await this.marketRepository.subscriptions.update(subscription);
         }
       }
       
-      // Enregistrement de la transaction
-      // if (client.points && client.points < points) {
-      //   throw new NotAcceptableException('Insufficient points');
-      // }
-      data.client = client;
-      data.type = TransactionTypeEnum.MANUAL;
-      const transaction = await this.marketRepository.transactions.create(
-        TransactionFactory.create(data),
-      );
-      if (transaction) {
-        if (annonceID) {
-          const annonce = await this.marketRepository.prestations.findOne({
-            where: { id: annonceID },
-          });
-          if (annonce) {
-            annonce.paid = true;
-            await this.marketRepository.prestations.update(annonce);
-          }
-        }
-        // Mise à jour du solde de points
-        // client.points! -= points;
-        await this.marketRepository.users.update(client);
-      }
-      return transaction;
+      return subscription;
     } catch (error) {
-      this.logger.error(error, 'ERROR::PointService.deduct');
+      this.logger.error(error, 'ERROR::TransactionService.deduct');
       throw error;
     }
   }
 
   async subscribe(
-    client: Staff,
-    data: IUpdatePointDTO,
+    user: Staff,
+    data: ISubscribePrestation,
   ): Promise<Client> {
     try {
-      const { annonceID, points } = data;
-      if (!client) throw new NotFoundException('Client not found');
-      const annonce = await this.marketRepository.prestations.findOne({
-        relations: { store: {client: true}},
-        where: { id: annonceID },
-      });
-      if (!annonce) throw new NotFoundException('Annonce not found');
-      if (annonce.store?.client) {
-        if (annonce.paid) {
-          return annonce.store?.client;
+      const { prestationID, clientID } = data;
+      const client = await this.fetchOneClient(clientID!);
+      const prestation = await this.prestationService.fetchOne(prestationID!);
+      if (client && prestation) {
+        const existedSubscription = await this.marketRepository.subscriptions.findOne({
+          where: {
+            client: { id: clientID },
+            prestation: { id: prestationID },
+          }
+        });
+        if (existedSubscription) {
+          if (existedSubscription.isActivated) {
+            throw new NotAcceptableException('Subscription already exists');
+          } else {
+            existedSubscription.isActivated = true;
+            existedSubscription.closedAt = null as any;
+            await this.marketRepository.subscriptions.update(existedSubscription);
+          }
+        } else {
+          const subData = SubscriptionFactory.create({
+            client,
+            prestation,
+          });
+          const subscription = await this.marketRepository.subscriptions.create(subData);
+          if (subscription) {
+            data.client = client;
+            data.subscription = subscription;
+            await this.marketRepository.transactions.create(
+              TransactionFactory.create(data),
+            )
+          }
         }
-        if (points && points > 0) {
-          await this.add(client, data);
-        }
-        // if (client.points && client.points < annonce.price) {
-        //   throw new BadRequestException('Insufficient points');
-        // }
-        // if (client.points! >= annonce.price) {
-          data.points = annonce.price;
-          await this.revoke(client, data);
-          return annonce.store?.client;
-        // }
       }
-      return client;
+      throw new NotFoundException('Client or Prestation not found');
     } catch (error) {
-      this.logger.error(error, 'ERROR::PointService.pay');
+      this.logger.error(error, 'ERROR::TransactionService.pay');
       throw error;
     }
-  }
-
-  /**
-   * Récupère le solde actuel des points d'un client
-   * @param id ID du client
-   * @returns Le nombre actuel de points du client
-   */
-  async getCurrentPoints(id: string): Promise<number> {
-    // const client = await this.clientService.fetchOne(id);
-    // if (!client) throw new NotFoundException('Client not found');
-
-    // return client.points;
-    return id ? 1000 : 0;
   }
 }

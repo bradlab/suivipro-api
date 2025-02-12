@@ -12,29 +12,13 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
-import { IAnnonceQuery, ICreateAnnonceDTO } from './annonce.service.interface';
+import { IPrestationQuery, ICreatePrestationDTO } from './prestation.service.interface';
 
-export class CreateAnnonceDTO implements ICreateAnnonceDTO {
-  @ApiProperty({ name: 'storeID', required: false })
-  @IsOptional()
+export class CreateAnnonceDTO implements ICreatePrestationDTO {
+
+  @ApiProperty({ name: 'name', description: "Nom de la prestation ou APP" })
   @IsString()
-  @IsUUID()
-  storeID: string;
-
-  @ApiProperty({ name: 'title', description: "Titre de l'annonce" })
-  @IsOptional()
-  @IsString()
-  title: string;
-
-  // @ApiProperty({
-  //   name: 'images',
-  //   description: 'Images de prévisualisation',
-  //   required: false,
-  // })
-  // @IsOptional()
-  // @IsArray()
-  // @IsString({ each: true })
-  // images?: string[];
+  name: string;
 
   @ApiProperty({
     format: 'binary',
@@ -52,15 +36,6 @@ export class CreateAnnonceDTO implements ICreateAnnonceDTO {
   @IsOptional()
   @IsString()
   description?: string;
-
-  @ApiProperty({
-    name: 'quantity',
-    description: 'Quantité de déchets plastiques',
-  })
-  @IsOptional()
-  // @Type(() => Number)
-  // @IsNumber()
-  quantity: number;
 
   @ApiProperty({
     name: 'tags',
@@ -90,23 +65,24 @@ export class UpdateAnnonceDTO extends PartialType(CreateAnnonceDTO) {
   keptImages?: string[];
 }
 
-export class AnnonceQuery implements IAnnonceQuery {
+export class PrestationQuery implements IPrestationQuery {
   @ApiProperty({ name: 'id', required: false })
   @IsOptional()
   @IsString()
   @IsUUID()
   id?: string;
 
-  @ApiProperty({ name: 'storeID', required: false })
+  @ApiProperty({ name: 'subscriptionID', required: false })
   @IsOptional()
   @IsString()
   @IsUUID()
-  storeID?: string;
+  subscriptionID?: string;
 
-  @ApiProperty({ name: 'tags', required: false })
+  @ApiProperty({ name: 'clientID', required: false })
   @IsOptional()
-  @IsString({ each: true })
-  tags?: string[];
+  @IsString()
+  @IsUUID()
+  clientID?: string;
 
   @ApiProperty({ name: 'price', required: false })
   @IsOptional()
@@ -114,9 +90,8 @@ export class AnnonceQuery implements IAnnonceQuery {
   @IsNumber()
   price?: number;
 
-  @ApiProperty({ name: 'quantity', required: false })
+  @ApiProperty({ name: 'name', required: false })
   @IsOptional()
-  @Type(() => Number)
-  @IsNumber()
-  quantity?: number;
+  @IsString()
+  name?: string;
 }

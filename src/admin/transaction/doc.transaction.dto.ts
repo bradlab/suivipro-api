@@ -5,16 +5,23 @@ import {
   TransactionTypeEnum,
 } from '../_shared/model/transaction.model';
 import { DocStaffDTO } from 'admin/manager/doc.staff.dto';
+import { OClient } from 'admin/_shared/model/client.model';
+import { DocClientDTO } from 'admin/client/doc.client.dto';
+import { OSubscription } from 'admin/_shared/model/subscription.model';
+import { DocSubscriptionDTO } from 'admin/subscription/doc.subscription.dto';
 
 export class DocTransactionDTO implements Partial<OTransaction> {
   @ApiProperty({ type: String, name: 'id' })
   id: string;
 
-  @ApiProperty({ type: DocStaffDTO, name: 'client', required: false })
-  client: OStaff;
+  @ApiProperty({ type: DocClientDTO, name: 'client', required: false })
+  client: OClient;
+
+  @ApiProperty({ type: DocSubscriptionDTO, name: 'client', required: false })
+  subscription: OSubscription;
 
   @ApiProperty({ type: Number, name: 'points' })
-  points: number;
+  amount: number;
 
   @ApiProperty({ type: String, name: 'type' })
   type: TransactionTypeEnum;

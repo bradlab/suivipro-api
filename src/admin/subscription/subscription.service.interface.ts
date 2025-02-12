@@ -1,16 +1,14 @@
-import { IPosition } from '../../_shared/domain/interface';
 import { ISubscription } from '../_shared/model/subscription.model';
 import { Staff } from '../_shared/model/staff.model';
+import { Prestation } from 'admin/_shared/model/prestation.model';
+import { Client } from 'admin/_shared/model/client.model';
 
-export interface ICreateStoreDTO {
-  name: string;
-  address?: string;
-  gps?: IPosition;
-  client?: Staff;
-  isDefault?: boolean;
+export interface ICreateSubscriptionDTO {
+  prestation?: Prestation;
+  client?: Client;
 }
 
-export interface IUpdateStoreDTO extends Partial<ICreateStoreDTO> {
+export interface IUpdateStoreDTO extends Partial<ICreateSubscriptionDTO> {
   id: string;
 }
 
@@ -21,7 +19,7 @@ export abstract class IStoreService {
    * @param clientId ID du client
    * @returns L'store créée
    */
-  abstract add(client: Staff, data: ICreateStoreDTO): Promise<ISubscription>;
+  abstract add(client: Staff, data: ICreateSubscriptionDTO): Promise<ISubscription>;
 
   /**
    * Récupère toutes les stores avec pagination
@@ -44,7 +42,7 @@ export abstract class IStoreService {
    * @param data Données partiellement mises à jour (Partial<ICreateStoreDTO>)
    * @returns L'store modifiée
    */
-  abstract edit(data: Partial<ICreateStoreDTO>): Promise<ISubscription>;
+  abstract edit(data: Partial<ICreateSubscriptionDTO>): Promise<ISubscription>;
 
   /**
    * Supprime une store par son ID

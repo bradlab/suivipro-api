@@ -1,7 +1,7 @@
 import { IRegisterClientDTO } from 'admin/auth/auth.service.interface';
 import { HashFactory } from 'adapter/hash.factory';
 import { DataHelper } from 'adapter/helper/data.helper';
-import { StoreFactory } from './subscription.factory';
+import { SubscriptionFactory } from './subscription.factory';
 import { Client, OClient } from '../model/client.model';
 import { ICreateClientDTO, IUpdateClientDTO } from 'admin/client/client.service.interface';
 
@@ -53,7 +53,7 @@ export abstract class ClientFactory {
         country: client.country,
         logo: DataHelper.getFileLink(client.logo!),
         gps: client.gps,
-        stores: StoreFactory.getSubscriptions(client.subscriptions!),
+        stores: SubscriptionFactory.getSubscriptions(client.subscriptions!),
         isActivated: client.isActivated,
         createdAt: client.createdAt,
         updatedAt: client.updatedAt,

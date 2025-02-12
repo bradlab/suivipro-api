@@ -1,24 +1,24 @@
 // /src/annonces/annonce.service.spec.ts
 import { Test, TestingModule } from '@nestjs/testing';
 import { NotFoundException, ConflictException } from '@nestjs/common';
-import { AnnonceService } from './annonce.service';
+import { PrestationService } from './prestation.service';
 import { IDashboardRepository } from '../_shared/dashboard.repository';
-import { ICreateAnnonceDTO } from './annonce.service.interface';
+import { ICreatePrestationDTO } from './prestation.service.interface';
 import { TestGlobalConfig } from '../../../test/test-config.spec';
 import { ANNONCE_DATA, CLIENT_MODEL_DATA } from '../../../test/test.data.spec';
 import { Staff } from '../_shared/model/staff.model';
 
-describe('AnnonceService', () => {
-  let service: AnnonceService;
+describe('PrestationService', () => {
+  let service: PrestationService;
   let marketRepository: IDashboardRepository;
 
-  const data: ICreateAnnonceDTO = ANNONCE_DATA;
+  const data: ICreatePrestationDTO = ANNONCE_DATA;
   const client = CLIENT_MODEL_DATA as Staff;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        AnnonceService,
+        PrestationService,
         {
           provide: IDashboardRepository,
           useValue: TestGlobalConfig.mockDataService,
@@ -26,7 +26,7 @@ describe('AnnonceService', () => {
       ],
     }).compile();
 
-    service = module.get<AnnonceService>(AnnonceService);
+    service = module.get<PrestationService>(PrestationService);
     marketRepository = module.get<IDashboardRepository>(IDashboardRepository);
   });
 

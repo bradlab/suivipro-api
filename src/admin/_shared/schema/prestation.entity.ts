@@ -12,30 +12,21 @@ import { SubscriptionEntity } from './subscription.entity';
 import { ISubscription } from '../model/subscription.model';
 import { TransactionEntity } from './transaction.entity';
 import { Transaction } from '../model/transaction.model';
-import { Prestation } from '../model/annonce.model';
+import { Prestation } from '../model/prestation.model';
 
 @Entity('prestations')
 export class PrestationEntity extends ATimestamp implements Prestation {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ nullable: true })
-  title?: string;
+  @Column()
+  name?: string;
 
   @Column({ nullable: true })
   description?: string;
 
-  @Column()
-  quantity: number;
-
   @Column({ nullable: true, default: true })
   isActivated?: boolean;
-
-  @Column({ nullable: true, default: false })
-  paid?: boolean;
-
-  @Column({type: 'simple-array', nullable: true}) // Pour gérer les tags en tant que tableau simple
-  tags: string[]; // ex: ['tuyaux', 'emballages']
 
   @Column({type: 'simple-array', nullable: true}) // Pour gérer les images en tant que tableau simple
   images: string[];
@@ -43,8 +34,8 @@ export class PrestationEntity extends ATimestamp implements Prestation {
   @Column()
   price: number;
 
-  @ManyToOne(() => SubscriptionEntity, (store) => store.prestation) // Relation avec Store
-  store: ISubscription;
+  @OneToMany(() => SubscriptionEntity, (subscription) => subscription.prestation) // Relation avec Store
+  subscriptions: ISubscription[];
 
   @OneToMany(
     () => TransactionEntity,

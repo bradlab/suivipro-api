@@ -22,8 +22,8 @@ import { IUpdatePwdDTO } from 'app/auth.input.dto';
 import { IForgotPasswordDTO } from 'app/auth.input.dto';
 import { ISigninAccoutDTO } from 'app/auth.input.dto';
 import { StaffFactory } from '../_shared/factory/staff.factory';
-import { StoreFactory } from '../_shared/factory/subscription.factory';
-import { IPointService } from '../transaction/point.service.interface';
+import { SubscriptionFactory } from '../_shared/factory/subscription.factory';
+import { ITransactionService } from '../transaction/point.service.interface';
 import { TransactionTypeEnum } from '../_shared/model/transaction.model';
 
 @Injectable()

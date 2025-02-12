@@ -1,24 +1,24 @@
 // /src/annonces/annonce.service.spec.ts
 import { Test, TestingModule } from '@nestjs/testing';
 import { NotFoundException, ConflictException } from '@nestjs/common';
-import { StoreService } from './store.service';
+import { SubscriptionService } from './subscription.service';
 import { IDashboardRepository } from '../_shared/dashboard.repository';
-import { ICreateStoreDTO } from './store.service.interface';
+import { ICreateSubscriptionDTO } from './subscription.service.interface';
 import { TestGlobalConfig } from '../../../test/test-config.spec';
 import { CLIENT_MODEL_DATA, STORE_DATA } from '../../../test/test.data.spec';
 import { Staff } from '../_shared/model/staff.model';
 
 describe('AnnonceService', () => {
-  let service: StoreService;
+  let service: SubscriptionService;
   let marketRepository: IDashboardRepository;
 
-  const data: ICreateStoreDTO = STORE_DATA;
+  const data: ICreateSubscriptionDTO = STORE_DATA;
   const client = CLIENT_MODEL_DATA as Staff;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        StoreService,
+        SubscriptionService,
         {
           provide: IDashboardRepository,
           useValue: TestGlobalConfig.mockDataService,
@@ -26,7 +26,7 @@ describe('AnnonceService', () => {
       ],
     }).compile();
 
-    service = module.get<StoreService>(StoreService);
+    service = module.get<SubscriptionService>(SubscriptionService);
     marketRepository = module.get<IDashboardRepository>(IDashboardRepository);
   });
 

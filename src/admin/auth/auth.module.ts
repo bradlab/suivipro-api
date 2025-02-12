@@ -5,7 +5,7 @@ import { AuthController } from './auth.controller';
 import { JWT_CONSTANCE } from 'domain/constant/constants';
 import { MarketRepositoryModule } from '../_shared/database.module';
 import { IMarketAuthService } from './auth.service.interface';
-import { PointModule } from '../transaction';
+import { TransactionModule } from '../transaction';
 
 @Module({
   imports: [
@@ -15,7 +15,7 @@ import { PointModule } from '../transaction';
       verifyOptions: { ignoreExpiration: true },
     }),
     MarketRepositoryModule,
-    forwardRef(() => PointModule),
+    forwardRef(() => TransactionModule),
   ],
   controllers: [AuthController],
   providers: [{ provide: IMarketAuthService, useClass: MarketAuthService }],

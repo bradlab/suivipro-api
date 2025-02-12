@@ -5,7 +5,7 @@ import { SexEnum } from 'app/enum';
 import { TestGlobalConfig } from 'test/test-config.spec';
 import { ClientService } from './client.service';
 import { IDashboardRepository } from '../_shared/dashboard.repository';
-import { IClientService } from './client.service.interface';
+import { IClientService, ICreateClientDTO } from './client.service.interface';
 import { IMarketAuthService } from '../auth/auth.service.interface';
 import { IRegisterClientDTO } from 'admin/auth/auth.service.interface';
 
@@ -20,16 +20,11 @@ describe('UserService', () => {
   const lastname = faker.person.lastName();
   const email = faker.internet.email();
   const phone = faker.phone.number({ style: 'international' });
-  const password = faker.string.alphanumeric(8);
 
-  const data: IRegisterClientDTO = {
-    password,
-    firstname: firstname,
-    lastname: lastname,
+  const data: ICreateClientDTO = {
     fullname: lastname,
     email,
     phone,
-    sex: faker.helpers.enumValue(SexEnum),
     address: faker.location.streetAddress(),
     country: faker.location.country(),
   };
@@ -131,9 +126,9 @@ describe('UserService', () => {
       expect(staff).toBeDefined();
       expect(staff.fullname).toBeTruthy();
       expect({
-        firstname: staff?.firstname,
+        fullname: staff?.fullname,
         email: staff.email,
-      }).toStrictEqual({ firstname: data.firstname, email: data.email });
+      }).toStrictEqual({ fullname: data.fullname, email: data.email });
       expect(staff.id).toBeDefined();
       expect(staff.id).toBeTruthy();
       expect(staff.id).toEqual(expect.any(String));

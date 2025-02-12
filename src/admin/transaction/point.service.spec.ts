@@ -3,7 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { NotFoundException, ConflictException } from '@nestjs/common';
 import { TransactionService } from './transaction.service';
 import { IDashboardRepository } from '../_shared/dashboard.repository';
-import { IUpdatePointDTO } from './point.service.interface';
+import { ISubscribePrestation } from './point.service.interface';
 import { TestGlobalConfig } from '../../../test/test-config.spec';
 import { Staff } from '../_shared/model/staff.model';
 import { CLIENT_MODEL_DATA, POINT_DATA } from '../../../test/test.data.spec';
@@ -12,7 +12,7 @@ describe('AnnonceService', () => {
   let service: TransactionService;
   let marketRepository: IDashboardRepository;
 
-  const data: IUpdatePointDTO = POINT_DATA;
+  const data: ISubscribePrestation = POINT_DATA;
   const client = CLIENT_MODEL_DATA as Staff;
 
   beforeEach(async () => {

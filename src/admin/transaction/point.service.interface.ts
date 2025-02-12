@@ -4,43 +4,47 @@ import {
   Transaction,
   TransactionTypeEnum,
 } from '../_shared/model/transaction.model';
+import { ISubscription } from 'admin/_shared/model/subscription.model';
+import { Prestation } from 'admin/_shared/model/prestation.model';
 
-export interface IUpdatePointDTO {
+export interface IRevokeSubscribe {
+  subscriptionID?: string;
+}
+export interface ISubscribePrestation {
   clientID?: string; // Utilisation de clientID dans le DTO
-  client?: Staff;
-  points: number;
-  description?: string;
-  type?: TransactionTypeEnum;
-  annonceID?: string;
+  client?: Client;
+  prestation?: Prestation;
+  type: TransactionTypeEnum;
+  amount?: number;
+  prestationID?: string;
+  subscription?: ISubscription
 }
 
-export abstract class IPointService {
+export abstract class ITransactionService {
   abstract add(
     client: Staff,
-    data: IUpdatePointDTO,
+    data: ISubscribePrestation,
   ): Promise<Transaction>;
 
   abstract addBulk(
     client: Staff,
-    data: IUpdatePointDTO[],
+    data: ISubscribePrestation[],
   ): Promise<Transaction[]>;
 
   abstract deductBulk(
     client: Staff,
-    data: IUpdatePointDTO[],
+    data: ISubscribePrestation[],
   ): Promise<Transaction[]>;
 
   abstract subscribe(
     client: Staff,
-    data: Partial<IUpdatePointDTO>,
+    data: Partial<ISubscribePrestation>,
   ): Promise<Client>;
 
   abstract revoke(
-    client: Staff,
-    data: IUpdatePointDTO,
-  ): Promise<Transaction>;
+    user: Staff,
+    data: IRevokeSubscribe,
+  ): Promise<ISubscription>;
 
   abstract fetchAll(clientId: string): Promise<Transaction[]>;
-
-  abstract getCurrentPoints(clientId: string): Promise<number>;
 }

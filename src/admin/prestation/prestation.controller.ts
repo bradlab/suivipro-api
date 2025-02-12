@@ -18,11 +18,11 @@ import {
 import { diskStorage } from 'multer';
 
 import {
-  AnnonceQuery,
+  PrestationQuery,
   CreateAnnonceDTO,
   UpdateAnnonceDTO,
-} from './annonce.input.dto';
-import { IPrestationService } from './annonce.service.interface';
+} from './prestation.input.dto';
+import { IPrestationService } from './prestation.service.interface';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -37,7 +37,7 @@ import { DocPrestationDTO } from './doc.prestation.dto';
 import { StaffGuard } from '../_shared/guard/auth.guard';
 import { IDsParamDTO } from 'adapter/param.dto';
 import { PrestationFactory } from '../_shared/factory/prestation.factory';
-import { OPrestation } from '../_shared/model/annonce.model';
+import { OPrestation } from '../_shared/model/prestation.model';
 import { BaseConfig } from 'config/base.config';
 import { DataHelper } from 'adapter/helper/data.helper';
 import { Public } from 'adapter/decorator';
@@ -82,10 +82,10 @@ export class PrestationController {
   }
 
   @Post('bulk')
-  @ApiOperation({ summary: 'Créer une nouvelle prestation' })
+  @ApiOperation({ summary: 'Créer une nouvelle liste de prestations' })
   @ApiResponse({
     status: 200,
-    description: "L'prestation a été créée avec succès",
+    description: "Prestation a été créée avec succès",
     type: DocPrestationDTO,
   })
   async bulk(
@@ -104,7 +104,7 @@ export class PrestationController {
   })
   async getClientAnnonces(
     @GetClient() client: Staff,
-    @Query() param: AnnonceQuery,
+    @Query() param: PrestationQuery,
   ) {
     const ads = await this.prestationService.fetchClientOwn(client, param);
     return ads?.map((prestation) => PrestationFactory.getPrestation(prestation));
@@ -123,7 +123,7 @@ export class PrestationController {
     isArray: true,
     type: DocPrestationDTO,
   })
-  async getAllAnnonces(@Query() param: AnnonceQuery) {
+  async getAllAnnonces(@Query() param: PrestationQuery) {
     const prestations = await this.prestationService.fetchAll(param);
     return prestations?.map((prestation) => PrestationFactory.getPrestation(prestation));
   }

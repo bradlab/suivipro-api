@@ -1,3 +1,3 @@
-export * from './annonce.controller';
-export * from './annonce.service';
-export * from './annonce.module';
+export * from './prestation.controller';
+export * from './prestation.service';
+export * from './prestation.module';

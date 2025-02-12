@@ -15,13 +15,16 @@ export class TransactionEntity
   id: string;
 
   @Column()
-  points: number;
+  amount: number;
 
   @Column({ nullable: true })
   description: string;
 
   @Column({ enum: TransactionTypeEnum, nullable: true })
   type: TransactionTypeEnum;
+
+  @Column({ default: true })
+  isActivated: boolean;
 
   @ManyToOne(() => ClientEntity, (client) => client.transactions, {
     eager: true,

@@ -9,18 +9,9 @@ import {
   IsOptional,
 } from 'class-validator';
 import { TransactionTypeEnum } from '../_shared/model/transaction.model';
-import { IUpdatePointDTO } from './point.service.interface';
+import { ISubscribePrestation } from './point.service.interface';
 
-export class UpdatePointDTO implements IUpdatePointDTO {
-  @ApiProperty({
-    type: Number,
-    description: 'Quantité de points à ajouter ou déduire',
-  })
-  @IsNumber()
-  @Min(1, {
-    message: 'La quantité de points doit être supérieure ou égale à 1',
-  })
-  points: number;
+export class SubscribeClientDTO implements ISubscribePrestation {
 
   @ApiProperty({
     type: String,
@@ -39,7 +30,7 @@ export class UpdatePointDTO implements IUpdatePointDTO {
   @IsOptional()
   @IsString()
   @IsUUID()
-  annonceID?: string;
+  prestationID?: string;
 }
 
 export class PayAnnonceDTO {

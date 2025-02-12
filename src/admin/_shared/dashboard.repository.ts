@@ -4,7 +4,7 @@ import { DBGenericRepository } from 'framework/database.repository';
 import { Repository } from 'typeorm';
 import { StaffEntity } from './schema/staff.entity';
 import { PrestationEntity } from './schema/prestation.entity';
-import { Prestation } from './model/annonce.model';
+import { Prestation } from './model/prestation.model';
 import { Staff } from './model/staff.model';
 import { Transaction } from './model/transaction.model';
 import { TransactionEntity } from './schema/transaction.entity';
