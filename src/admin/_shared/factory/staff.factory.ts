@@ -2,7 +2,7 @@ import { IRegisterClientDTO } from 'admin/auth/auth.service.interface';
 import { HashFactory } from 'adapter/hash.factory';
 import { Staff, OStaff } from '../model/staff.model';
 import { DataHelper } from 'adapter/helper/data.helper';
-import { StoreFactory } from './store.factory';
+import { StoreFactory } from './subscription.factory';
 import { IUpdateClientDTO } from 'admin/manager/staff.service.interface';
 
 export abstract class StaffFactory {

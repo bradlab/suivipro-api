@@ -1,38 +1,117 @@
 import { ApiProperty, PartialType, PickType } from '@nestjs/swagger';
 import {
   IsBoolean,
+  IsEmail,
   IsOptional,
   IsPhoneNumber,
   IsString,
   IsUUID,
+  ValidateNested,
 } from 'class-validator';
 import { IClientQuery } from 'admin/auth/auth.service.interface';
-import { BasicPersonnalInfoDTO } from 'adapter/param.dto';
-import { ParseBoolean } from '../../_shared/adapter/validation/custom.transformer';
+import { ICreateClientDTO } from './client.service.interface';
+import { PositionDTO } from 'adapter/param.dto';
+import { Type } from 'class-transformer';
+import { IPosition } from 'domain/interface';
 
-export class ClientAccoutDTO extends BasicPersonnalInfoDTO {
+export class ClientAccoutDTO implements ICreateClientDTO {
   @ApiProperty({
     type: String,
-    name: 'fullName',
+    name: 'fullname',
     description: "Raison de l'entreprise s'il s'agit",
-    required: false,
   })
-  @IsOptional()
   @IsString()
-  @IsString()
-  fullName?: string;
+  fullname: string;
 
   @ApiProperty({
-    type: Boolean,
-    name: 'isMerchant',
+    type: PositionDTO,
+    name: 'gps',
     required: false,
   })
   @IsOptional()
-  // @ParseBoolean()
-  // @IsBoolean()
-  isMerchant?: boolean;
+  @ValidateNested()
+  @Type(() => PositionDTO)
+  gps?: IPosition;
 
-  avatar?: string;
+  @ApiProperty({
+    type: String,
+    name: 'phone',
+    description:
+      "Le numéro de téléphone sur lequel contacter l'utilisateur du compte ou envoyer des informations OTP",
+  })
+  @IsString()
+  @IsPhoneNumber()
+  phone: string;
+
+  @ApiProperty({
+    type: String,
+    name: 'email',
+    description:
+      "L'adresse e-mail sur laquelle partagent certaines informations avec l'utilisateur par notification",
+    required: false,
+  })
+  @IsOptional()
+  @IsEmail()
+  email?: string;
+
+  @ApiProperty({
+    type: String,
+    name: 'CNI',
+    description: 'CNI complète de la personne',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  CNI?: string;
+
+  @ApiProperty({
+    type: String,
+    name: 'NIF',
+    description: "NIF de l'entreprise",
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  NIF?: string;
+
+  @ApiProperty({
+    type: String,
+    name: 'description',
+    description: 'Description du métier du client',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  description?: string;
+
+  @ApiProperty({
+    type: String,
+    name: 'address',
+    description: 'Adresse complète de la personne',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  address?: string;
+
+  @ApiProperty({
+    type: String,
+    name: 'country',
+    description: 'Pays de résidence de la personne',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  country?: string;
+
+  @ApiProperty({
+    type: String,
+    format: 'binary',
+    name: 'logo',
+    description: 'Logo du client',
+    required: false,
+  })
+  logo?: string;
 }
 
 export class RegisterClientDTO extends ClientAccoutDTO {

@@ -18,5 +18,5 @@ export class Prestation extends ITimestamp {
 
 export interface OPrestation extends Omit<Prestation, 'store'> {
   user?: OStaff;
-  store?: OSubscription;
+  subscription?: OSubscription;
 }

@@ -1,23 +1,24 @@
 import { Person } from 'domain/interface/person.model';
 import { Transaction } from './transaction.model';
 import { OSubscription, ISubscription } from './subscription.model';
-import { IPosition } from 'domain/interface';
+import { IPosition, ITimestamp } from 'domain/interface';
 
-export class Client extends Person {
+export class Client extends ITimestamp {
   id: string;
+  CNI?: string;
+  NIF?: string;
+  email?: string;
+  phone?: string;
+  address?: string;
+  country?: string;
   fullname: string;
-  username?: string;
-  password: string;
-  code?: string;
   isActivated?: boolean;
-  isMerchant?: boolean;
-  bonus?: number;
-  points?: number;
   gps?: IPosition;
-  // relation
+  description?: string;
   logo?: string;
+  // relation
   subscriptions?: ISubscription[];
-  pointTransactions?: Transaction[];
+  transactions?: Transaction[];
 }
 
 export interface OClient extends Partial<Omit<Client, 'stores'>> {

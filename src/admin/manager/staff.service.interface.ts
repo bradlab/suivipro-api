@@ -2,8 +2,8 @@ import { PartialDeep } from 'domain/types';
 import { Staff } from '../_shared/model/staff.model';
 import { IClientQuery } from 'admin/auth/auth.service.interface';
 import { IRegisterClientDTO } from 'admin/auth/auth.service.interface';
-import { ICreateClientDTO } from 'admin/auth/auth.service.interface';
-export interface IUpdateClientDTO extends Partial<ICreateClientDTO> {
+import { ICreateStaffDTO } from 'admin/auth/auth.service.interface';
+export interface IUpdateClientDTO extends Partial<ICreateStaffDTO> {
   id: string;
 }
 

@@ -9,21 +9,18 @@ import {
 import { DataHelper } from 'adapter/helper/data.helper';
 import { DeepQueryType, PartialDeep } from 'domain/types';
 import { VIn, VNot } from 'framework/orm.clauses';
-import { IClientService, IUpdateClientDTO } from './client.service.interface';
+import { IClientService, ICreateClientDTO, IUpdateClientDTO } from './client.service.interface';
 import { IClientQuery } from 'admin/auth/auth.service.interface';
-import { IRegisterClientDTO } from 'admin/auth/auth.service.interface';
 import { IDashboardRepository } from '../_shared/dashboard.repository';
-import { IMarketAuthService } from '../auth/auth.service.interface';
-import { StoreFactory } from '../_shared/factory/store.factory';
 import { ClientFactory } from 'admin/_shared/factory/client.factory';
 import { Client } from 'admin/_shared/model/client.model';
+import { Staff } from 'admin/_shared/model/staff.model';
 
 @Injectable()
 export class ClientService implements IClientService {
   private readonly logger = new Logger();
   constructor(
-    private marketRepository: IDashboardRepository,
-    private authService: IMarketAuthService,
+    private dashboardRepository: IDashboardRepository,
   ) {}
 
   async fetchAll(param?: IClientQuery): Promise<Client[]> {
@@ -37,7 +34,7 @@ export class ClientService implements IClientService {
         queryParam = { ...queryParam, id: VIn(param!.ids!) };
       }
       if (!DataHelper.isEmpty(queryParam)) {
-        return await this.marketRepository.clients.find({
+        return await this.dashboardRepository.clients.find({
           where: { ...queryParam },
           order: { createdAt: 'DESC' },
         });
@@ -45,14 +42,14 @@ export class ClientService implements IClientService {
 
       return [];
     }
-    return await this.marketRepository.clients.find({
+    return await this.dashboardRepository.clients.find({
       order: { createdAt: 'DESC' },
     });
   }
 
   async search(data: PartialDeep<Client>): Promise<Client> {
     try {
-      return this.authService.search(data);
+      return this.dashboardRepository.clients.findOne({where: data});
     } catch (error) {
       this.logger.error(error, 'ERROR::ClientService.search');
       throw error;
@@ -60,36 +57,26 @@ export class ClientService implements IClientService {
   }
 
   async fetchOne(id: string): Promise<Client> {
-    return await this.marketRepository.clients.findOne({
+    return await this.dashboardRepository.clients.findOne({
       relations: { subscriptions: true },
       where: { id },
     });
   }
 
-  async add(data: IRegisterClientDTO): Promise<Client> {
+  async add(data: ICreateClientDTO): Promise<Client> {
     try {
       const { email, phone } = data;
       let existed: Client;
-      if (email) existed = await this.authService.search({ email });
-      if (phone) existed = await this.authService.search({ phone });
+      if (email) existed = await this.search({ email });
+      if (phone) existed = await this.search({ phone });
       if (existed!) {
         throw new ConflictException(
-          'Employee account email or phone number allready exist',
+          'Business account email or phone number allready exist',
         );
       }
-      const client = await this.marketRepository.clients.create(
-        await ClientFactory.create(data),
+      const client = await this.dashboardRepository.clients.create(
+        ClientFactory.create(data),
       );
-      if (client) {
-        const store = StoreFactory.create({
-          client,
-          name: client.fullname,
-          address: client.address,
-          gps: client.gps,
-          isDefault: true,
-        });
-        await this.marketRepository.subscriptions.create(store);
-      }
       return client;
     } catch (error) {
       this.logger.error(error, 'ERROR::ClientService.add');
@@ -97,63 +84,13 @@ export class ClientService implements IClientService {
     }
   }
 
-  async editCredential(
-    user: Client,
-    data: IUpdateClientDTO,
-    isEdit?: boolean,
-  ): Promise<boolean> {
-    try {
-      const client = await this.fetchOne(user?.id);
-      if (client) {
-        let existedUser: Client;
-        if (data.email) {
-          existedUser = await this.marketRepository.clients.findOne({
-            where: { email: data.email, id: VNot(client.id) },
-          });
-        }
-        if (data.phone) {
-          existedUser = await this.marketRepository.clients.findOne({
-            where: { phone: data.phone, id: VNot(client.id) },
-          });
-        }
-        if (existedUser!) {
-          throw new ConflictException('Email or phone number allready exist');
-        }
-        if (isEdit) return true;
-        const newUser = await this.marketRepository.clients.update(
-          ClientFactory.updateUsername(client, data),
-        );
-        if (newUser) {
-          return true;
-        }
-        return false;
-      }
-      throw new NotFoundException('Client not found');
-    } catch (error) {
-      this.logger.error(error.message, 'ERROR::ClientService.editCredential');
-
-      throw error;
-    }
-  }
-
   async edit(data: IUpdateClientDTO): Promise<Client> {
     try {
-      const { id, phone, email } = data;
+      const { id } = data;
       const user = await this.fetchOne(id);
-      let updateAll = false;
       if (user) {
-        if (
-          (email && email !== user.email) ||
-          (phone && phone !== user.phone)
-        ) {
-          updateAll = await this.editCredential(
-            user,
-            { id, phone, email },
-            true,
-          );
-        }
-        const userInstance = ClientFactory.update(user, data, updateAll);
-        return await this.marketRepository.clients.update(userInstance);
+        const userInstance = ClientFactory.update(user, data);
+        return await this.dashboardRepository.clients.update(userInstance);
       }
       throw new NotFoundException('Client not found');
     } catch (error) {
@@ -163,15 +100,47 @@ export class ClientService implements IClientService {
     }
   }
 
+    async bulk(staff: Staff, datas: ICreateClientDTO[]): Promise<Client[]> {
+      try {
+        // Vérifier si une annonce avec le même titre existe déjà
+        const clients: Client[] = [];
+        if (DataHelper.isNotEmptyArray(datas)) {
+          if (!staff) {
+            throw new NotFoundException('Client not found');
+          }
+          for (const data of datas) {
+            const { phone } = data;
+            let queryParam: DeepQueryType<Client> | DeepQueryType<Client>[] = {};
+            if (phone) queryParam = { ...queryParam, phone };
+            const existingAnnonce = await this.dashboardRepository.clients.findOne({
+              where: queryParam,
+            });
+            if(!existingAnnonce) {
+              clients.push(ClientFactory.create(data));
+            }
+          }
+        }
+        if (DataHelper.isNotEmptyArray(clients)) {
+  
+          return await this.dashboardRepository.clients.createMany(clients );
+        }
+        return [];
+      } catch (error) {
+        this.logger.error(error, 'ERROR::AnnonceService.add');
+        throw error;
+      }
+    }
+  
+
   async setState(ids: string[]): Promise<boolean> {
     try {
-      const users = ids && (await this.marketRepository.clients.findByIds(ids));
+      const users = ids && (await this.dashboardRepository.clients.findByIds(ids));
       if (users?.length > 0) {
         users.map((user) => {
           user.isActivated = !user.isActivated;
           return user;
         });
-        return await this.marketRepository.users
+        return await this.dashboardRepository.clients
           .updateMany(users)
           .then(() => true);
       }
@@ -186,7 +155,7 @@ export class ClientService implements IClientService {
     try {
       const user = await this.fetchOne(id);
       if (user) {
-        return await this.marketRepository.users
+        return await this.dashboardRepository.clients
           .remove(user)
           .then(() => true);
       }

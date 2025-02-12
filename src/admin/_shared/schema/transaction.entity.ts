@@ -23,7 +23,7 @@ export class TransactionEntity
   @Column({ enum: TransactionTypeEnum, nullable: true })
   type: TransactionTypeEnum;
 
-  @ManyToOne(() => ClientEntity, (client) => client.pointTransactions, {
+  @ManyToOne(() => ClientEntity, (client) => client.transactions, {
     eager: true,
     onDelete: 'CASCADE',
   })

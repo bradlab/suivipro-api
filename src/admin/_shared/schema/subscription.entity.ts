@@ -35,7 +35,7 @@ export class SubscriptionEntity extends ATimestamp implements ISubscription {
   @Column({ default: false })
   isDefault: boolean;
 
-  @ManyToOne(() => ClientEntity, (client) => client.stores)
+  @ManyToOne(() => ClientEntity, (client) => client.subscriptions)
   client?: Client;
 
   @ManyToOne(() => PrestationEntity, (annonce) => annonce.store, {
