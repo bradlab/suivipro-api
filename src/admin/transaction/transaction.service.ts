@@ -13,9 +13,10 @@ import {
   TransactionTypeEnum,
 } from '../_shared/model/transaction.model';
 import { IPointService, IUpdatePointDTO } from './point.service.interface';
-import { TransactionFactory } from '../_shared/factory/point.factory';
+import { TransactionFactory } from '../_shared/factory/transaction.factory';
 import { Staff } from '../_shared/model/staff.model';
 import { DataHelper } from 'adapter/helper/data.helper';
+import { Client } from 'admin/_shared/model/client.model';
 
 @Injectable()
 export class TransactionService extends IPointService implements OnApplicationBootstrap {
@@ -218,7 +219,7 @@ export class TransactionService extends IPointService implements OnApplicationBo
   async subscribe(
     client: Staff,
     data: IUpdatePointDTO,
-  ): Promise<Staff> {
+  ): Promise<Client> {
     try {
       const { annonceID, points } = data;
       if (!client) throw new NotFoundException('Client not found');

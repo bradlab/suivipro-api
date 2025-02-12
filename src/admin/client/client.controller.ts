@@ -27,18 +27,20 @@ import { DataGenerator } from 'domain/generator/data.generator';
 import { IDParamDTO, IDsParamDTO } from 'adapter/param.dto';
 import { IClientService } from './client.service.interface';
 import {
+  ClientAccoutDTO,
   ClientQuerDTO,
   RegisterClientDTO,
   UpdateClientDTO,
   UpdateUsernameDTO,
 } from './client.input.dto';
 import { Staff, OStaff } from '../_shared/model/staff.model';
-import { StaffFactory } from '../_shared/factory/staff.factory';
 import { DocClientDTO } from './doc.client.dto';
 import { GetClient } from '../_shared/decorator';
 import { StaffGuard } from '../_shared/guard/auth.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { BaseConfig } from 'config/base.config';
+import { OClient } from 'admin/_shared/model/client.model';
+import { ClientFactory } from 'admin/_shared/factory/client.factory';
 
 @ApiTags('Client as user management')
 @UseGuards(StaffGuard)
@@ -60,7 +62,7 @@ export class ClientController {
       param.ids = ids?.split(',');
     }
     const clients = await this.clientService.fetchAll(param);
-    return clients.map((client) => StaffFactory.getClient(client));
+    return clients.map((client) => ClientFactory.getClient(client));
   }
 
   // @HasPermission(RuleEnum.CAN_SHOW_CLIENT)
@@ -84,7 +86,7 @@ export class ClientController {
   @ApiResponse({ type: DocClientDTO })
   async search(@Query() param: ClientQuerDTO): Promise<OStaff | undefined> {
     if (param) {
-      return StaffFactory.getClient(
+      return ClientFactory.getClient(
         await this.clientService.search(param, undefined),
       );
     }
@@ -103,21 +105,20 @@ export class ClientController {
   })
   @ApiResponse({ type: DocClientDTO })
   async show(@Param() { id }: IDParamDTO): Promise<OStaff> {
-    return StaffFactory.getClient(await this.clientService.fetchOne(id));
+    return ClientFactory.getClient(await this.clientService.fetchOne(id));
   }
 
   /**
    * @method POST
    */
 
-  @ApiExcludeEndpoint()
   @Post()
   // @HasPermission(RuleEnum.CAN_CREATE_CLIENT)
   @ApiConsumes('multipart/form-data', 'application/json')
   @ApiOperation({
     summary: 'Create account client',
     description:
-      'As a partner of the project, you can create client as employee for your business',
+      'Créé un client B2B',
   })
   @UseInterceptors(
     FileInterceptor('avatar', {
@@ -129,42 +130,40 @@ export class ClientController {
     }),
   )
   async create(
-    @Body() data: RegisterClientDTO,
+    @Body() data: ClientAccoutDTO,
     @UploadedFile() file: any,
-  ): Promise<OStaff | undefined> {
-    data.avatar = file ? file.filename : undefined;
-    data.password = DataGenerator.randomString();
+  ): Promise<OStaff> {
+    data.logo = file ? file.filename : undefined;
     const client = await this.clientService.add(data);
-    if (client)
-      return { ...StaffFactory.getClient(client), password: data.password };
+    return ClientFactory.getClient(client);
   }
+
+    @Post('bulk')
+    @ApiOperation({ summary: 'Créer une liste de clients' })
+    @ApiResponse({
+      status: 200,
+      description: "clients créés avec succès",
+      type: DocClientDTO,
+    })
+    async bulk(
+      @GetClient() client: Staff,
+      @Body() datas: ClientAccoutDTO[],
+    ) {
+      const prestations = await this.clientService.bulk(client, datas);
+      return prestations?.map((prestation) => ClientFactory.getClient(prestation));
+    }
 
   /**
    * @method PATCH
    */
-
-  @Patch('clientname')
-  // @HasPermission(RuleEnum.CAN_UPDATE_CLIENT_PROFILE)
-  @ApiOperation({
-    summary: 'Update client credentials',
-    description:
-      "Modifier le mail et le numéro de téléphone de l'utilisateur. Cette action devra le déconnecter après",
-  })
-  @ApiResponse({ type: DocClientDTO })
-  async credentials(
-    @GetClient() client: Staff,
-    @Body() data: UpdateUsernameDTO,
-  ): Promise<boolean> {
-    return await this.clientService.editCredential(client, data);
-  }
 
   @Patch()
   // @HasPermission(RuleEnum.CAN_UPDATE_CLIENT)
   @ApiOperation({ summary: 'Update client account' })
   @ApiBody({ type: UpdateClientDTO })
   @ApiResponse({ type: DocClientDTO })
-  async update(@Body() data: UpdateClientDTO): Promise<OStaff> {
-    return StaffFactory.getClient(await this.clientService.edit(data));
+  async update(@Body() data: UpdateClientDTO): Promise<OClient> {
+    return ClientFactory.getClient(await this.clientService.edit(data));
   }
 
   @Patch('state')

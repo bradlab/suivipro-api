@@ -1,7 +1,7 @@
 import { ITimestamp } from 'domain/interface';
 import { Staff } from './staff.model';
 import { OPrestation, Prestation } from './annonce.model';
-import { OClient } from './client.model';
+import { Client, OClient } from './client.model';
 import { ISubscription, OSubscription } from './subscription.model';
 
 export enum TransactionTypeEnum {
@@ -15,7 +15,7 @@ export class Transaction extends ITimestamp {
   points: number;
   description?: string;
   type: TransactionTypeEnum;
-  client: Staff;
+  client: Client;
   subscription?: ISubscription;
 }
 

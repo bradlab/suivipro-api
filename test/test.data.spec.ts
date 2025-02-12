@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker/.';
 import { ICreateAnnonceDTO } from 'admin/prestation/annonce.service.interface';
 import { Staff } from 'admin/_shared/model/staff.model';
-import { ICreateClientDTO } from 'admin/auth/auth.service.interface';
+import { ICreateStaffDTO } from 'admin/auth/auth.service.interface';
 import { Prestation } from 'admin/_shared/model/annonce.model';
 import {
   Transaction,
@@ -30,7 +30,7 @@ export const ANNONCE_MODEL_DATA: Partial<Prestation> = {
   updatedAt: faker.date.past(),
 };
 
-export const CLIENT_DATA: ICreateClientDTO = {
+export const CLIENT_DATA: ICreateStaffDTO = {
   firstname: faker.person.firstName(),
   lastname: faker.person.lastName(),
   email: faker.internet.email(),

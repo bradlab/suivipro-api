@@ -5,7 +5,7 @@ import {
   IsOptional,
 } from 'class-validator';
 import { BasicPersonnalInfoDTO } from 'adapter/param.dto';
-export class RegisterClientDTO extends BasicPersonnalInfoDTO {
+export class RegisterStaffDTO extends BasicPersonnalInfoDTO {
 
   @ApiProperty({
     type: String,

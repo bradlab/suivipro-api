@@ -35,7 +35,7 @@ import {
   SigninAccoutDTO,
   UpdatePwdDTO,
 } from 'adapter/auth.dto';
-import { RegisterClientDTO } from './auth.input.dto';
+import { RegisterStaffDTO } from './auth.input.dto';
 import { BaseConfig } from 'config/base.config';
 import { Public } from 'adapter/decorator';
 import { StaffGuard } from 'admin/_shared/guard/auth.guard';
@@ -104,7 +104,7 @@ export class AuthController {
   )
   @ApiResponse({ type: DocStaffDTO })
   async create(
-    @Body() data: RegisterClientDTO,
+    @Body() data: RegisterStaffDTO,
     @UploadedFile() file: any,
   ): Promise<SignedStaff> {
     data.avatar = file?.filename;

@@ -3,9 +3,10 @@ import { AnnonceModule } from './prestation';
 import { PointModule } from './transaction';
 import { StoreModule } from './subscription';
 import { StaffModule } from './manager';
+import { ClientModule } from './client';
 
 @Module({
-  imports: [StaffModule, AnnonceModule, PointModule, StoreModule],
-  exports: [StaffModule, AnnonceModule, PointModule, StoreModule],
+  imports: [StaffModule, ClientModule, AnnonceModule, PointModule, StoreModule],
+  exports: [StaffModule, ClientModule, AnnonceModule, PointModule, StoreModule],
 })
 export class MarketModule {}

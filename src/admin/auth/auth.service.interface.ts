@@ -3,17 +3,17 @@ import { Staff } from 'admin/_shared/model/staff.model';
 import { IUpdatePwdDTO } from 'app/auth.input.dto';
 import { IForgotPasswordDTO } from 'app/auth.input.dto';
 import { ISigninAccoutDTO } from 'app/auth.input.dto';
-import { IBasicPersonnalInfoDTO } from 'app/person.input.dto';
 import { IPosition } from '../../_shared/domain/interface';
+import { IBasicPersonnalInfoDTO } from 'app/person.input.dto';
 
-export interface ICreateClientDTO extends IBasicPersonnalInfoDTO {
+export interface ICreateStaffDTO extends IBasicPersonnalInfoDTO {
   avatar?: string;
   isMerchant?: boolean;
   username?: string;
   fullname?: string;
   gps?: IPosition;
 }
-export interface IRegisterClientDTO extends ICreateClientDTO {
+export interface IRegisterClientDTO extends ICreateStaffDTO {
   password: string;
   fullname?: string;
   deviceToken?: string;

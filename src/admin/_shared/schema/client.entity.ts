@@ -29,57 +29,38 @@ export class ClientEntity extends ATimestamp implements Client {
   @Column()
   phone?: string;
 
-  @Column({ nullable: true })
-  firstname?: string;
-
-  @Column({ nullable: true })
-  lastname?: string;
-
   @Column({ nullable: true }) // will be used for entreprise
   fullname: string;
 
   @Column({ nullable: true })
-  username?: string;
-
-  @Column({ nullable: true })
-  avatar?: string;
+  logo?: string;
 
   @Column({ nullable: true })
   address?: string;
 
+  @Column({ nullable: true })
+  description?: string;
+
+  @Column({ nullable: true })
+  CNI?: string;
+
+  @Column({ nullable: true })
+  NIF?: string;
+
   @Column({ type: 'simple-json', nullable: true })
   gps?: IPosition;
-
-  @Column({ nullable: true, default: 0 })
-  points?: number;
-
-  @Column({ nullable: true, default: 0 })
-  bonus?: number;
-
-  @Column({ nullable: true, enum: SexEnum })
-  sex?: SexEnum;
 
   @Column({ nullable: true })
   country?: string;
 
-  @Exclude()
-  @Column()
-  password: string;
-
-  @Column({ nullable: true })
-  code?: string;
-
   @Column({ nullable: true, default: true })
   isActivated?: boolean;
-
-  @Column({ nullable: true, default: false })
-  isMerchant?: boolean;
 
   @OneToMany(() => SubscriptionEntity, (store) => store.client, {
     onDelete: 'CASCADE',
   })
-  stores: ISubscription[];
+  subscriptions: ISubscription[];
 
   @OneToMany(() => TransactionEntity, (transaction) => transaction.client)
-  pointTransactions?: Transaction[];
+  transactions?: Transaction[];
 }

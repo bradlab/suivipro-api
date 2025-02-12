@@ -1,3 +1,4 @@
+import { Client } from 'admin/_shared/model/client.model';
 import { Staff } from '../_shared/model/staff.model';
 import {
   Transaction,
@@ -32,7 +33,7 @@ export abstract class IPointService {
   abstract subscribe(
     client: Staff,
     data: Partial<IUpdatePointDTO>,
-  ): Promise<Staff>;
+  ): Promise<Client>;
 
   abstract revoke(
     client: Staff,

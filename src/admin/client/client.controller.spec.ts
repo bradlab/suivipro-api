@@ -5,9 +5,8 @@ import { ClientService } from './client.service';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import { TestGlobalConfig } from 'test/test-config.spec';
 import { ClientController } from './client.controller';
-import { SexEnum } from 'app/enum';
-import { IRegisterClientDTO } from 'admin/auth/auth.service.interface';
-import { IClientService } from './client.service.interface';
+import { ICreateStaffDTO } from 'admin/auth/auth.service.interface';
+import { IClientService, ICreateClientDTO } from './client.service.interface';
 import { IDashboardRepository } from '../_shared/dashboard.repository';
 
 describe('ClientController', () => {
@@ -15,15 +14,13 @@ describe('ClientController', () => {
   let moduleRef: TestingModule;
   let repository: IDashboardRepository;
 
-  const firstName = faker.person.firstName();
+  const firstName = faker.person.fullName();
   const lastName = faker.person.lastName();
-  const data: IRegisterClientDTO = {
-    firstname: firstName,
-    lastname: lastName,
+  const data: ICreateClientDTO = {
+    fullname: firstName,
     phone: faker.phone.number({ style: 'international' }),
-    sex: faker.helpers.enumValue(SexEnum),
+    NIF: faker.string.alphanumeric(),
     email: faker.internet.email({ firstName, lastName }),
-    password: faker.string.alphanumeric(8),
     address: faker.location.streetAddress(),
     country: faker.location.country(),
   };

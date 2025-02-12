@@ -14,9 +14,11 @@ import { IPointService } from './point.service.interface';
 import { GetClient } from '../_shared/decorator';
 import { Staff, OStaff } from '../_shared/model/staff.model';
 import { StaffFactory } from 'admin/_shared/factory/staff.factory';
-import { TransactionFactory } from 'admin/_shared/factory/point.factory';
+import { TransactionFactory } from 'admin/_shared/factory/transaction.factory';
 import { StaffGuard } from 'admin/_shared/guard/auth.guard';
 import { DocStaffDTO } from 'admin/manager/doc.staff.dto';
+import { OClient } from 'admin/_shared/model/client.model';
+import { ClientFactory } from 'admin/_shared/factory/client.factory';
 
 @ApiTags('Transactions Management')
 @ApiBearerAuth()
@@ -51,8 +53,8 @@ export class TransactionController {
   async subscribe(
     @GetClient() client: Staff,
     @Body() data: PayAnnonceDTO,
-  ): Promise<OStaff> {
-    return StaffFactory.getClient(await this.pointService.subscribe(client, data));
+  ): Promise<OClient> {
+    return ClientFactory.getClient(await this.pointService.subscribe(client, data));
   }
 
   @ApiOperation({ summary: 'Révoquer un abonnement' })

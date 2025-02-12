@@ -1,7 +1,7 @@
 import { DataHelper } from 'adapter/helper/data.helper';
 import { IUpdatePointDTO } from '../../transaction/point.service.interface';
 import { OTransaction, Transaction } from '../model/transaction.model';
-import { StaffFactory } from './staff.factory';
+import { ClientFactory } from './client.factory';
 
 export abstract class TransactionFactory {
   static create(data: IUpdatePointDTO): Transaction {
@@ -22,7 +22,7 @@ export abstract class TransactionFactory {
         id: transaction.id,
         type: transaction.type,
         description: transaction.description,
-        client: StaffFactory.getClient(transaction.client), // Conversion pour utiliser l'ID du client depuis l'entité
+        client: ClientFactory.getClient(transaction.client), // Conversion pour utiliser l'ID du client depuis l'entité
         points: transaction.points,
         createdAt: transaction.createdAt,
         updatedAt: transaction.updatedAt,

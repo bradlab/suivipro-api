@@ -1,30 +1,40 @@
 import { PartialDeep } from 'domain/types';
-import { Staff } from '../_shared/model/staff.model';
 import { IClientQuery } from 'admin/auth/auth.service.interface';
-import { IRegisterClientDTO } from 'admin/auth/auth.service.interface';
-import { ICreateClientDTO } from 'admin/auth/auth.service.interface';
+import { IPosition } from 'domain/interface';
+import { Client } from 'admin/_shared/model/client.model';
+import { Staff } from 'admin/_shared/model/staff.model';
+
+export interface ICreateClientDTO {
+  logo?: string;
+  NIF?: string;
+  CNI?: string;
+  fullname: string;
+  gps?: IPosition;
+  phone: string;
+  email?: string;
+  address?: string;
+  description?: string;
+  country?: string;
+}
 export interface IUpdateClientDTO extends Partial<ICreateClientDTO> {
   id: string;
 }
 
 export abstract class IClientService {
-  abstract add(data: IRegisterClientDTO): Promise<Staff>;
+  abstract add(data: ICreateClientDTO): Promise<Client>;
 
-  abstract fetchAll(param?: IClientQuery): Promise<Staff[]>;
+  abstract fetchAll(param?: IClientQuery): Promise<Client[]>;
 
   abstract search(
-    data: PartialDeep<Staff>,
+    data: PartialDeep<Client>,
     withAccess?: boolean,
-  ): Promise<Staff>;
+  ): Promise<Client>;
 
-  abstract fetchOne(id: string): Promise<Staff>;
+  abstract bulk(staff: Staff, datas: ICreateClientDTO[]): Promise<Client[]>;
 
-  abstract edit(data: IUpdateClientDTO): Promise<Staff>;
+  abstract fetchOne(id: string): Promise<Client>;
 
-  abstract editCredential(
-    user: Staff,
-    data: Partial<IUpdateClientDTO>,
-  ): Promise<boolean>;
+  abstract edit(data: IUpdateClientDTO): Promise<Client>;
 
   abstract setState(ids: string[]): Promise<boolean>;
 

@@ -13,7 +13,7 @@ import {
   ICreateAnnonceDTO,
   IUpdateAnnonceDTO,
 } from './annonce.service.interface';
-import { PrestationFactory } from '../_shared/factory/annonce.factory';
+import { PrestationFactory } from '../_shared/factory/prestation.factory';
 import { DataHelper } from '../../_shared/adapter/helper/data.helper';
 import { VLike, VNot } from '../../_shared/framework/orm.clauses';
 import { Staff } from '../_shared/model/staff.model';

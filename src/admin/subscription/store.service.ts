@@ -11,7 +11,7 @@ import { ICreateStoreDTO, IUpdateStoreDTO } from './store.service.interface';
 import { DataHelper } from '../../_shared/adapter/helper/data.helper';
 import { VLike, VNot } from '../../_shared/framework/orm.clauses';
 import { Staff } from '../_shared/model/staff.model';
-import { StoreFactory } from '../_shared/factory/store.factory';
+import { StoreFactory } from '../_shared/factory/subscription.factory';
 
 @Injectable()
 export class StoreService {
