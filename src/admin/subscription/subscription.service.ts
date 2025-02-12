@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { IDashboardRepository } from '../_shared/dashboard.repository';
 import { ISubscription } from '../_shared/model/subscription.model';
-import { ICreateSubscriptionDTO } from './subscription.service.interface';
+import { ICreateSubscriptionDTO, ISubscriptionService } from './subscription.service.interface';
 import { DataHelper } from '../../_shared/adapter/helper/data.helper';
 import { Staff } from '../_shared/model/staff.model';
 import { SubscriptionFactory } from '../_shared/factory/subscription.factory';
@@ -13,17 +13,28 @@ import { DeepQueryType } from 'domain/types';
 import { ISubscriptionQuery } from 'admin/transaction/transaction.service.interface';
 
 @Injectable()
-export class SubscriptionService {
+export class SubscriptionService implements ISubscriptionService {
   private readonly logger = new Logger();
 
   constructor(private dashboardRepository: IDashboardRepository) {}
+
+  async editManySubscriptions(subs: ISubscription[]): Promise<void> {
+    try {
+      if (DataHelper.isNotEmptyArray(subs)) {
+        await this.dashboardRepository.subscriptions.updateMany(subs);
+      }
+    } catch (error) {
+      this.logger.error(error, 'ERROR::SubscriptionService.fetchAll');
+    }
+  }
 
   async fetchAll(param: ISubscriptionQuery): Promise<ISubscription[]> {
     try {
       let queryParam: DeepQueryType<ISubscription> | DeepQueryType<ISubscription>[] = {};
       if (!DataHelper.isEmpty(param)) {
-        const {type, clientID, subscriptionID, transactionID, prestationID} = param;
+        const {type, clientID, subscriptionID, transactionID, prestationID, isValid} = param;
         if (subscriptionID) queryParam = {...queryParam, id: subscriptionID};
+        if (isValid) queryParam = {...queryParam, isActivated: isValid};
         if (type) queryParam = {...queryParam, type};
         if (clientID) queryParam = {...queryParam, client: {id: clientID}};
         if (transactionID) queryParam = {...queryParam, transactions: {id: transactionID}};

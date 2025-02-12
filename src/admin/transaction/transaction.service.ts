@@ -21,6 +21,7 @@ import { ISubscription } from 'admin/_shared/model/subscription.model';
 import { IPrestationService } from 'admin/prestation/prestation.service.interface';
 import { SubscriptionFactory } from 'admin/_shared/factory/subscription.factory';
 import { DeepQueryType } from 'domain/types';
+import { ITaskService } from 'src/task/task.service.interface';
 
 @Injectable()
 export class TransactionService extends ITransactionService {
@@ -28,6 +29,7 @@ export class TransactionService extends ITransactionService {
   constructor(
     private readonly marketRepository: IDashboardRepository,
     private readonly prestationService: IPrestationService,
+    private readonly taskService: ITaskService,
   ) {
     super();
   }
@@ -207,8 +209,10 @@ export class TransactionService extends ITransactionService {
                 type
               }),
             )
-            if (trans)
+            if (trans) {
+              void this.taskService.addSubscriptionExpiryCron(existedSubscription);
               return await this.marketRepository.subscriptions.update(existedSubscription);
+            }
           }
         } else {
           const subData = SubscriptionFactory.create({
@@ -224,8 +228,10 @@ export class TransactionService extends ITransactionService {
             const trans = await this.marketRepository.transactions.create(
               TransactionFactory.create(data),
             );
-            if (trans)
+            void this.taskService.addSubscriptionExpiryCron(subscription);
+            if (trans) {
               return subscription;
+            }
           }
         }
       }

@@ -11,6 +11,7 @@ import { AppService } from './app.service';
 import { CustomValidationPipe } from 'adapter/pipe/custom-validator.pipe';
 import { SeedsModule } from './_seeder/seeds.module';
 import { DashboardModule } from 'admin/dashboard.module';
+import { ScheduleModule } from '@nestjs/schedule';
 // import { AdminModule } from './admin/admin.module';
 
 @Module({
@@ -73,6 +74,7 @@ export class IAppModule {}
     }),
     IAppModule,
     SeedsModule,
+    ScheduleModule.forRoot(),
     ThrottlerModule.forRoot([
       {
         name: 'short',

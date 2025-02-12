@@ -17,6 +17,7 @@ export interface ISubscriptionQuery {
   subscriptionID?: string;
   clientID?: string;
   prestationID?: string;
+  isValid?: boolean;
 }
 
 export interface ISubscribePrestation {

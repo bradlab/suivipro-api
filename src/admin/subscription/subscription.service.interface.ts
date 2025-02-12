@@ -38,15 +38,15 @@ export abstract class ISubscriptionService {
   /**
    * Modifie une abonnement existante
    * @param id ID de l'abonnement à modifier
-   * @param data Données partiellement mises à jour (Partial<ICreateSubscriptionDTO>)
+   * @param data Données partiellement mises à jour (ISubscription)
    * @returns L'abonnement modifiée
    */
-  abstract edit(data: Partial<ICreateSubscriptionDTO>): Promise<ISubscription>;
+  abstract editManySubscriptions(sub: ISubscription[]): Promise<void>;
 
   /**
    * Supprime une abonnement par son ID
    * @param id ID de l'abonnement à supprimer
    * @returns Un boolean indiquant si la suppression a réussi
    */
-  abstract remove(id: string): Promise<boolean>;
+  abstract remove(ids: string[]): Promise<boolean>;
 }

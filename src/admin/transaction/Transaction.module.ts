@@ -5,9 +5,10 @@ import { ITransactionService } from './transaction.service.interface';
 import { TransactionController } from './transaction.controller';
 import { StaffModule } from 'admin/manager';
 import { PrestationModule } from 'admin/prestation';
+import { TaskModule } from 'src/task/task.module';
 
 @Module({
-  imports: [forwardRef(() => StaffModule), PrestationModule],
+  imports: [forwardRef(() => StaffModule), PrestationModule, TaskModule],
   controllers: [TransactionController],
   providers: [{ provide: ITransactionService, useClass: TransactionService }],
   exports: [ITransactionService],
