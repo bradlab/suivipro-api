@@ -34,7 +34,7 @@ import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { GetClient } from '../_shared/decorator';
 import { Staff } from '../_shared/model/staff.model';
 import { DocPrestationDTO } from './doc.prestation.dto';
-import { ClientGuard } from '../_shared/guard/auth.guard';
+import { StaffGuard } from '../_shared/guard/auth.guard';
 import { IDsParamDTO } from 'adapter/param.dto';
 import { PrestationFactory } from '../_shared/factory/annonce.factory';
 import { OPrestation } from '../_shared/model/annonce.model';
@@ -44,7 +44,7 @@ import { Public } from 'adapter/decorator';
 
 @ApiTags('Prestations management')
 @ApiBearerAuth()
-@UseGuards(ClientGuard)
+@UseGuards(StaffGuard)
 @Controller('prestations')
 export class PrestationController {
   constructor(private readonly prestationService: IPrestationService) {}

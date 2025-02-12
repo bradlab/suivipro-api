@@ -43,12 +43,15 @@ export class GlobalSeed implements OnApplicationBootstrap {
           firstname: 'Admin',
           lastname: 'First',
           fullname: 'Admin First',
-          phone: '+228 93 14 14 14',
+          phone: '+22893141414',
           address: 'Avenou, Lomé - Togo',
           country: 'Togo',
         }
-        const staff = await this.adminService.add(data);
-        console.log('ADMIN ===== STAFF', {email: staff?.email, pwd: data.password})
+        const existed = await this.adminService.search({phone: data.phone});
+        if (!existed) {
+          const staff = await this.adminService.add(data);
+          console.log('ADMIN ===== STAFF', {phone: staff?.phone, pwd: data.password})
+        }
       } catch (error) {
         this.logger.error(error.message, 'ERROR::GlobalSeed.createAdmin');
       }

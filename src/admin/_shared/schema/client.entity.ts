@@ -14,11 +14,12 @@ import { TransactionEntity } from './transaction.entity';
 import { ISubscription } from '../model/subscription.model';
 import { SubscriptionEntity } from './subscription.entity';
 import { IPosition } from '../../../_shared/domain/interface';
+import { Client } from '../model/client.model';
 
 @Entity('clients')
 @Index(['phone'], { unique: true, where: `deleted_at IS NULL` })
 @Index(['email'], { unique: true, where: `deleted_at IS NULL` })
-export class ClientEntity extends ATimestamp implements Staff {
+export class ClientEntity extends ATimestamp implements Client {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

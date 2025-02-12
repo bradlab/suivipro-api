@@ -1,7 +1,5 @@
 import { Person } from 'domain/interface/person.model';
-import { Transaction } from './transaction.model';
-import { OSubscription, ISubscription } from './subscription.model';
-import { IPosition } from 'domain/interface';
+import { OSubscription } from './subscription.model';
 
 export class Staff extends Person {
   id: string;
@@ -10,12 +8,8 @@ export class Staff extends Person {
   password: string;
   code?: string;
   isActivated?: boolean;
-  isMerchant?: boolean;
-  bonus?: number;
-  points?: number;
-  gps?: IPosition;
+  avatar?: string;
   // relation
-  logo?: string;
 }
 
 export interface OStaff extends Partial<Omit<Staff, 'stores'>> {

@@ -36,12 +36,12 @@ import { Staff, OStaff } from '../_shared/model/staff.model';
 import { StaffFactory } from '../_shared/factory/staff.factory';
 import { DocClientDTO } from './doc.client.dto';
 import { GetClient } from '../_shared/decorator';
-import { ClientGuard } from '../_shared/guard/auth.guard';
+import { StaffGuard } from '../_shared/guard/auth.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { BaseConfig } from 'config/base.config';
 
 @ApiTags('Client as user management')
-@UseGuards(ClientGuard)
+@UseGuards(StaffGuard)
 @ApiBearerAuth()
 @Controller('clients')
 export class ClientController {

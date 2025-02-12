@@ -91,7 +91,7 @@ export class TransactionService extends IPointService implements OnApplicationBo
         TransactionFactory.create(data),
       );
       if (transaction) {
-        client.points! += data.points;
+        // client.points! += data.points;
         await this.marketRepository.users.update(client);
         return transaction;
       }
@@ -102,13 +102,13 @@ export class TransactionService extends IPointService implements OnApplicationBo
     }
   }
 
-  async addBulk(client: Staff, datum: IUpdatePointDTO[]): Promise<Transaction[]> {
+  async addBulk(user: Staff, datum: IUpdatePointDTO[]): Promise<Transaction[]> {
     try {
-      if (!client) throw new NotFoundException('Client not found');
+      if (!user) throw new NotFoundException('Client not found');
 
       const transactions: Transaction[] = [];
       for (const data of datum) {
-        data.client = client;
+        data.client = user;
         data.type = TransactionTypeEnum.AUTOMATIC;
         const transaction = TransactionFactory.create(data);
         transactions.push(transaction);
@@ -116,9 +116,9 @@ export class TransactionService extends IPointService implements OnApplicationBo
       if (DataHelper.isNotEmptyArray(transactions)) {
         const points = await this.marketRepository.transactions.createMany(transactions);
         // Enregistrement de la transaction
-        client.points! += datum.reduce((a, b) => a + b.points, 0);
+        // user.points! += datum.reduce((a, b) => a + b.points, 0);
         // Mise à jour du solde de points
-        await this.marketRepository.users.update(client);
+        await this.marketRepository.users.update(user);
         return points;
       }
       return [];
@@ -133,7 +133,7 @@ export class TransactionService extends IPointService implements OnApplicationBo
       if (!client) throw new NotFoundException('Client not found');
 
       const transactions: Transaction[] = [];
-      let balance = client.points ?? 0 ;
+      let balance = 0 ;
       for (const data of datum) {
         if (data.points && data.points < balance) {
           data.client = client;
@@ -146,7 +146,7 @@ export class TransactionService extends IPointService implements OnApplicationBo
       if (DataHelper.isNotEmptyArray(transactions)) {
         const points = await this.marketRepository.transactions.createMany(transactions);
         // Enregistrement de la transaction
-        client.points = balance;
+        // client.points = balance;
         // Mise à jour du solde de points
         await this.marketRepository.users.update(client);
         return points;
@@ -186,9 +186,9 @@ export class TransactionService extends IPointService implements OnApplicationBo
       }
       
       // Enregistrement de la transaction
-      if (client.points && client.points < points) {
-        throw new NotAcceptableException('Insufficient points');
-      }
+      // if (client.points && client.points < points) {
+      //   throw new NotAcceptableException('Insufficient points');
+      // }
       data.client = client;
       data.type = TransactionTypeEnum.MANUAL;
       const transaction = await this.marketRepository.transactions.create(
@@ -205,7 +205,7 @@ export class TransactionService extends IPointService implements OnApplicationBo
           }
         }
         // Mise à jour du solde de points
-        client.points! -= points;
+        // client.points! -= points;
         await this.marketRepository.users.update(client);
       }
       return transaction;
@@ -234,14 +234,14 @@ export class TransactionService extends IPointService implements OnApplicationBo
         if (points && points > 0) {
           await this.add(client, data);
         }
-        if (client.points && client.points < annonce.price) {
-          throw new BadRequestException('Insufficient points');
-        }
-        if (client.points! >= annonce.price) {
+        // if (client.points && client.points < annonce.price) {
+        //   throw new BadRequestException('Insufficient points');
+        // }
+        // if (client.points! >= annonce.price) {
           data.points = annonce.price;
           await this.revoke(client, data);
           return annonce.store?.client;
-        }
+        // }
       }
       return client;
     } catch (error) {

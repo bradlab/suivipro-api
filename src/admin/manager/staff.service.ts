@@ -17,7 +17,6 @@ import { IRegisterClientDTO } from 'admin/auth/auth.service.interface';
 import { IDashboardRepository } from '../_shared/dashboard.repository';
 import { StaffFactory } from '../_shared/factory/staff.factory';
 import { IMarketAuthService } from '../auth/auth.service.interface';
-import { StoreFactory } from '../_shared/factory/store.factory';
 
 @Injectable()
 export class StaffService implements IStaffService {
@@ -81,16 +80,6 @@ export class StaffService implements IStaffService {
       const client = await this.dashboardRepository.users.create(
         await StaffFactory.create(data),
       );
-      if (client) {
-        const store = StoreFactory.create({
-          client,
-          name: client.fullname,
-          address: client.address,
-          gps: client.gps,
-          isDefault: true,
-        });
-        await this.dashboardRepository.subscriptions.create(store);
-      }
       return client;
     } catch (error) {
       this.logger.error(error, 'ERROR::ClientService.add');
