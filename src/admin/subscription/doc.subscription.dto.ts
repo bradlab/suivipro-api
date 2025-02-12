@@ -4,6 +4,7 @@ import { OClient } from 'admin/_shared/model/client.model';
 import { OPrestation } from 'admin/_shared/model/prestation.model';
 import { DocClientDTO } from 'admin/client/doc.client.dto';
 import { DocPrestationDTO } from 'admin/prestation/doc.prestation.dto';
+import { SubscriptionTypeEnum } from 'admin/_shared/model/transaction.model';
 
 export class DocSubscriptionDTO implements Partial<OSubscription> {
   @ApiProperty({ type: String, name: 'id' })
@@ -14,6 +15,14 @@ export class DocSubscriptionDTO implements Partial<OSubscription> {
 
   @ApiProperty({ type: DocPrestationDTO, name: 'prestation' })
   prestation: OPrestation;
+
+  @ApiProperty({
+    name: "type",
+    type: String,
+    description: "Type d'abonnement",
+    enum: SubscriptionTypeEnum,
+  })
+  type: SubscriptionTypeEnum;
 
   @ApiProperty({ type: Boolean, name: 'isActivated' })
   isActivated: boolean;

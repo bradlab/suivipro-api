@@ -14,15 +14,16 @@ import { Type } from 'class-transformer';
 
 import { IPrestationQuery, ICreatePrestationDTO } from './prestation.service.interface';
 
-export class CreateAnnonceDTO implements ICreatePrestationDTO {
+export class CreatePrestationDTO implements ICreatePrestationDTO {
 
   @ApiProperty({ name: 'name', description: "Nom de la prestation ou APP" })
   @IsString()
   name: string;
 
   @ApiProperty({
-    format: 'binary',
     name: 'images',
+    format: 'binary',
+    isArray: true,
     description: 'Images de prévisualisation',
     required: false,
   })
@@ -30,30 +31,21 @@ export class CreateAnnonceDTO implements ICreatePrestationDTO {
 
   @ApiProperty({
     name: 'description',
-    description: "Description de l'annonce",
+    description: "Description de la prestation",
     required: false,
   })
   @IsOptional()
   @IsString()
   description?: string;
 
-  @ApiProperty({
-    name: 'tags',
-    description: "Tags associés à l'annonce",
-    example: ['tuyaux', 'emballages'],
-  })
-  @IsOptional()
-  @IsString({ each: true })
-  tags: string[];
-
-  @ApiProperty({ name: 'price', description: 'Prix des déchets plastiques' })
+  @ApiProperty({ name: 'price' })
   @IsOptional()
   // @Type(() => Number)
   // @IsNumber()
   price: number;
 }
 
-export class UpdateAnnonceDTO extends PartialType(CreateAnnonceDTO) {
+export class UpdateAnnonceDTO extends PartialType(CreatePrestationDTO) {
   @ApiProperty({ name: 'id' })
   @IsString()
   @IsUUID()

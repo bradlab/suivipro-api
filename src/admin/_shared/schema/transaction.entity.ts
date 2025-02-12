@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { ATimestamp } from 'framework/timestamp.abstract';
-import { Transaction, TransactionTypeEnum } from '../model/transaction.model';
+import { Transaction, SubscriptionTypeEnum } from '../model/transaction.model';
 import { ClientEntity } from './client.entity';
 import { Client } from '../model/client.model';
 import { ISubscription } from '../model/subscription.model';
@@ -20,8 +20,8 @@ export class TransactionEntity
   @Column({ nullable: true })
   description: string;
 
-  @Column({ enum: TransactionTypeEnum, nullable: true })
-  type: TransactionTypeEnum;
+  @Column({ enum: SubscriptionTypeEnum, nullable: true })
+  type: SubscriptionTypeEnum;
 
   @Column({ default: true })
   isActivated: boolean;

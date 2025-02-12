@@ -13,7 +13,7 @@ import { ISubscription } from '../model/subscription.model';
 import { ClientEntity } from './client.entity';
 import { Client } from '../model/client.model';
 import { TransactionEntity } from './transaction.entity';
-import { Transaction } from '../model/transaction.model';
+import { Transaction, SubscriptionTypeEnum } from '../model/transaction.model';
 
 @Entity('subscriptions')
 export class SubscriptionEntity extends ATimestamp implements ISubscription {
@@ -22,6 +22,12 @@ export class SubscriptionEntity extends ATimestamp implements ISubscription {
   
   @Column({ default: true })
   isActivated: boolean;
+
+  @Column({ enum: SubscriptionTypeEnum, nullable: true })
+  type: SubscriptionTypeEnum;
+
+  @Column({ nullable: true, type: 'timestamp with time zone' })
+  startAt: Date;
 
   @Column({ nullable: true, type: 'timestamp with time zone' })
   closedAt: Date;

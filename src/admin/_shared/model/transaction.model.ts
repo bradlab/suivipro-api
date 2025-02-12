@@ -1,9 +1,9 @@
 import { ITimestamp } from 'domain/interface';
-import { OPrestation, Prestation } from './prestation.model';
+import { OPrestation } from './prestation.model';
 import { Client, OClient } from './client.model';
 import { ISubscription, OSubscription } from './subscription.model';
 
-export enum TransactionTypeEnum {
+export enum SubscriptionTypeEnum {
   AUTOMATIC = 'AUTOMATIC',
   MANUAL = 'MANUAL',
 }
@@ -13,7 +13,7 @@ export class Transaction extends ITimestamp {
   clientID?: string; // ID du client associé à la transaction, utilisé dans les DTO
   amount: number;
   description?: string;
-  type: TransactionTypeEnum;
+  type: SubscriptionTypeEnum;
   client: Client;
   subscription?: ISubscription;
   isActivated?: boolean;

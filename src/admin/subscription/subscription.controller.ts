@@ -10,13 +10,14 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { IStoreService } from './subscription.service.interface';
+import { ISubscriptionService } from './subscription.service.interface';
+import { SubscriptionQuery } from 'admin/transaction/transaction.input.dto';
 
 @ApiTags("Service subscription's management")
 @ApiBearerAuth()
 @Controller('subscriptions')
 export class SubscriptionController {
-  constructor(private readonly storeService: IStoreService) {}
+  constructor(private readonly subscriptionService: ISubscriptionService) {}
 
 
   /**
@@ -27,10 +28,9 @@ export class SubscriptionController {
    */
   @Get()
   async getAll(
-    @Query('page') page: number = 1,
-    @Query('limit') limit: number = 10,
+    @Query() param: SubscriptionQuery
   ) {
-    return this.storeService.fetchAll(page, limit);
+    return this.subscriptionService.fetchAll(param);
   }
 
   /**
@@ -40,7 +40,7 @@ export class SubscriptionController {
    */
   @Get(':id')
   async show(@Param('id', ParseUUIDPipe) id: string) {
-    return this.storeService.fetchOne(id);
+    return this.subscriptionService.fetchOne(id);
   }
 
 
@@ -52,6 +52,6 @@ export class SubscriptionController {
   @Delete()
   @HttpCode(HttpStatus.NO_CONTENT) // Répond avec le statut 204 (No Content) si la suppression réussit
   async deleteStore(@Param('id', ParseUUIDPipe) id: string) {
-    return this.storeService.remove(id);
+    return this.subscriptionService.remove(id);
   }
 }

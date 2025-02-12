@@ -5,9 +5,9 @@ import { ICreateStaffDTO } from 'admin/auth/auth.service.interface';
 import { Prestation } from 'admin/_shared/model/prestation.model';
 import {
   Transaction,
-  TransactionTypeEnum,
+  SubscriptionTypeEnum,
 } from 'admin/_shared/model/transaction.model';
-import { ISubscribePrestation } from 'admin/transaction/point.service.interface';
+import { ISubscribePrestation } from 'admin/transaction/transaction.service.interface';
 import { ICreateSubscriptionDTO } from 'admin/subscription/subscription.service.interface';
 import { ISubscription } from 'admin/_shared/model/subscription.model';
 
@@ -50,13 +50,13 @@ export const CLIENT_MODEL_DATA: Partial<Staff> = {
 export const POINT_DATA: ISubscribePrestation = {
   amount: faker.number.int({ min: 1, max: 100 }),
   clientID: faker.string.uuid(),
-  type: faker.helpers.enumValue(TransactionTypeEnum),
+  type: faker.helpers.enumValue(SubscriptionTypeEnum),
 };
 export const POINT_MODEL_DATA: Partial<Transaction> = {
   id: faker.string.uuid(),
   amount: faker.number.int({ min: 1, max: 100 }),
   client: CLIENT_MODEL_DATA as Staff,
-  type: faker.helpers.enumValue(TransactionTypeEnum),
+  type: faker.helpers.enumValue(SubscriptionTypeEnum),
   createdAt: faker.date.past(),
   updatedAt: faker.date.past(),
 };

@@ -23,8 +23,8 @@ import { IForgotPasswordDTO } from 'app/auth.input.dto';
 import { ISigninAccoutDTO } from 'app/auth.input.dto';
 import { StaffFactory } from '../_shared/factory/staff.factory';
 import { SubscriptionFactory } from '../_shared/factory/subscription.factory';
-import { ITransactionService } from '../transaction/point.service.interface';
-import { TransactionTypeEnum } from '../_shared/model/transaction.model';
+import { ITransactionService } from '../transaction/transaction.service.interface';
+import { SubscriptionTypeEnum } from '../_shared/model/transaction.model';
 
 @Injectable()
 export class MarketAuthService implements IMarketAuthService {

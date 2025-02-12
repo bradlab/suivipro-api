@@ -19,7 +19,7 @@ import { diskStorage } from 'multer';
 
 import {
   PrestationQuery,
-  CreateAnnonceDTO,
+  CreatePrestationDTO,
   UpdateAnnonceDTO,
 } from './prestation.input.dto';
 import { IPrestationService } from './prestation.service.interface';
@@ -72,7 +72,7 @@ export class PrestationController {
   )
   async createAnnonce(
     @GetClient() client: Staff,
-    @Body() data: CreateAnnonceDTO,
+    @Body() data: CreatePrestationDTO,
     @UploadedFiles() upload: Record<string, File[]>,
   ) {
     data.images = upload ? DataHelper.getFiles(upload.images as any) : undefined as any;
@@ -90,13 +90,13 @@ export class PrestationController {
   })
   async bulk(
     @GetClient() client: Staff,
-    @Body() datas: CreateAnnonceDTO[],
+    @Body() datas: CreatePrestationDTO[],
   ) {
     const prestations = await this.prestationService.bulk(client, datas);
     return prestations?.map((prestation) => PrestationFactory.getPrestation(prestation));
   }
 
-  @Get()
+  @Get('search')
   @ApiOperation({ summary: "Récupérer la liste des prestations d'un client" })
   @ApiResponse({
     isArray: true,
@@ -117,7 +117,7 @@ export class PrestationController {
    * @returns Une liste d'prestations paginées
    */
   @Public()
-  @Get('public')
+  @Get()
   @ApiOperation({ summary: "Récupérer la liste des prestations d'un client" })
   @ApiResponse({
     isArray: true,

@@ -2,15 +2,15 @@
 import {
   Injectable,
   Logger,
-  NotFoundException,
-  ConflictException,
 } from '@nestjs/common';
 import { IDashboardRepository } from '../_shared/dashboard.repository';
 import { ISubscription } from '../_shared/model/subscription.model';
-import { ICreateSubscriptionDTO, IUpdateStoreDTO } from './subscription.service.interface';
+import { ICreateSubscriptionDTO } from './subscription.service.interface';
 import { DataHelper } from '../../_shared/adapter/helper/data.helper';
 import { Staff } from '../_shared/model/staff.model';
 import { SubscriptionFactory } from '../_shared/factory/subscription.factory';
+import { DeepQueryType } from 'domain/types';
+import { ISubscriptionQuery } from 'admin/transaction/transaction.service.interface';
 
 @Injectable()
 export class SubscriptionService {
@@ -18,11 +18,20 @@ export class SubscriptionService {
 
   constructor(private dashboardRepository: IDashboardRepository) {}
 
-  async fetchAll(query: any): Promise<ISubscription[]> {
+  async fetchAll(param: ISubscriptionQuery): Promise<ISubscription[]> {
     try {
+      let queryParam: DeepQueryType<ISubscription> | DeepQueryType<ISubscription>[] = {};
+      if (!DataHelper.isEmpty(param)) {
+        const {type, clientID, subscriptionID, transactionID, prestationID} = param;
+        if (subscriptionID) queryParam = {...queryParam, id: subscriptionID};
+        if (type) queryParam = {...queryParam, type};
+        if (clientID) queryParam = {...queryParam, client: {id: clientID}};
+        if (transactionID) queryParam = {...queryParam, transactions: {id: transactionID}};
+        if (prestationID) queryParam = {...queryParam, prestation: {id: prestationID}};
+      }
       return await this.dashboardRepository.subscriptions.find({
         relations: { client: true, prestation: true,  },
-        where: { ...query },
+        where: { ...queryParam },
       });
     } catch (error) {
       this.logger.error(error, 'ERROR::SubscriptionService.fetchAll');

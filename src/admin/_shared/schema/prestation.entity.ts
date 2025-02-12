@@ -1,13 +1,11 @@
-// /src/annonces/entities/annonce.entity.ts
+// /src/prestations/entities/prestation.entity.ts
 import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  ManyToOne,
   OneToMany,
 } from 'typeorm';
 import { ATimestamp } from 'framework/timestamp.abstract';
-import { WasteTypeEnum } from '../dashboard.enum';
 import { SubscriptionEntity } from './subscription.entity';
 import { ISubscription } from '../model/subscription.model';
 import { TransactionEntity } from './transaction.entity';

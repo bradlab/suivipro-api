@@ -2,7 +2,7 @@ import { Client } from 'admin/_shared/model/client.model';
 import { Staff } from '../_shared/model/staff.model';
 import {
   Transaction,
-  TransactionTypeEnum,
+  SubscriptionTypeEnum,
 } from '../_shared/model/transaction.model';
 import { ISubscription } from 'admin/_shared/model/subscription.model';
 import { Prestation } from 'admin/_shared/model/prestation.model';
@@ -10,41 +10,45 @@ import { Prestation } from 'admin/_shared/model/prestation.model';
 export interface IRevokeSubscribe {
   subscriptionID?: string;
 }
+
+export interface ISubscriptionQuery {
+  transactionID?: string;
+  type?: SubscriptionTypeEnum;
+  subscriptionID?: string;
+  clientID?: string;
+  prestationID?: string;
+}
+
 export interface ISubscribePrestation {
   clientID?: string; // Utilisation de clientID dans le DTO
   client?: Client;
   prestation?: Prestation;
-  type: TransactionTypeEnum;
+  type: SubscriptionTypeEnum;
   amount?: number;
   prestationID?: string;
   subscription?: ISubscription
 }
 
 export abstract class ITransactionService {
-  abstract add(
+  abstract renewSubscription(
     client: Staff,
     data: ISubscribePrestation,
   ): Promise<Transaction>;
 
-  abstract addBulk(
-    client: Staff,
-    data: ISubscribePrestation[],
-  ): Promise<Transaction[]>;
-
-  abstract deductBulk(
+  abstract bulk(
     client: Staff,
     data: ISubscribePrestation[],
   ): Promise<Transaction[]>;
 
   abstract subscribe(
-    client: Staff,
-    data: Partial<ISubscribePrestation>,
-  ): Promise<Client>;
+    user: Staff,
+    data: ISubscribePrestation,
+  ): Promise<ISubscription>;
 
   abstract revoke(
     user: Staff,
     data: IRevokeSubscribe,
   ): Promise<ISubscription>;
 
-  abstract fetchAll(clientId: string): Promise<Transaction[]>;
+  abstract fetchAll(param: ISubscriptionQuery): Promise<Transaction[]>;
 }

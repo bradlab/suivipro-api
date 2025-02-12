@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { OStaff } from '../_shared/model/staff.model';
 import {
   OTransaction,
-  TransactionTypeEnum,
+  SubscriptionTypeEnum,
 } from '../_shared/model/transaction.model';
 import { DocStaffDTO } from 'admin/manager/doc.staff.dto';
 import { OClient } from 'admin/_shared/model/client.model';
@@ -24,7 +24,7 @@ export class DocTransactionDTO implements Partial<OTransaction> {
   amount: number;
 
   @ApiProperty({ type: String, name: 'type' })
-  type: TransactionTypeEnum;
+  type: SubscriptionTypeEnum;
 
   @ApiProperty({ type: Date, name: 'createdAt' })
   createdAt: Date;

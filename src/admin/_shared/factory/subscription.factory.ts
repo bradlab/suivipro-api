@@ -1,10 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ISubscription, OSubscription } from '../model/subscription.model';
-import { IUpdateStoreDTO } from '../../subscription/subscription.service.interface';
 import { ICreateSubscriptionDTO } from '../../subscription/subscription.service.interface';
 import { DataHelper } from '../../../_shared/adapter/helper/data.helper';
 import { ClientFactory } from './client.factory';
-import { Prestation } from '../model/prestation.model';
 import { PrestationFactory } from './prestation.factory';
 
 export abstract class SubscriptionFactory {
@@ -12,6 +10,8 @@ export abstract class SubscriptionFactory {
     const subscription = new ISubscription();
     subscription.client = data.client;
     subscription.prestation = data.prestation;
+    subscription.type = data.type;
+    subscription.startAt = new Date();
 
     return subscription;
   }
