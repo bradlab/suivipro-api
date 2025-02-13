@@ -24,6 +24,7 @@ export abstract class SubscriptionFactory {
     if (subscription) {
       return {
         id: subscription.id,
+        type: subscription.type,
         startAt: subscription.startAt,
         dueDate: subscription.dueDate,
         closedAt: subscription.closedAt,

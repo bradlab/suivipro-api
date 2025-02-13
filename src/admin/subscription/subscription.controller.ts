@@ -14,6 +14,8 @@ import { ISubscriptionService } from './subscription.service.interface';
 import { SubscriptionQuery } from 'admin/transaction/transaction.input.dto';
 import { IDsParamDTO } from 'adapter/param.dto';
 import { DocSubscriptionDTO } from './doc.subscription.dto';
+import { SubscriptionFactory } from 'admin/_shared/factory/subscription.factory';
+import { DataSubItem, ISubscription } from 'admin/_shared/model/subscription.model';
 
 @ApiTags("Service subscription's management")
 @ApiBearerAuth()
@@ -34,7 +36,31 @@ export class SubscriptionController {
   async getAll(
     @Query() param: SubscriptionQuery
   ) {
-    return this.subscriptionService.fetchAll(param);
+    const subs = await this.subscriptionService.fetchAll(param);
+    // const group = this.groupByMonthYear(subs);
+    // console.log('GROUPED =========', group);
+    return subs.map(sub => SubscriptionFactory.getSubscription(sub));
+  }
+
+  groupByMonthYear(data: ISubscription[]): { [key: string]: ISubscription[] } {
+    const grouped: { [key: string]: ISubscription[] } = {};
+    const monthNames = ["Janv.", "Fév.", "Mars", "Avr.", "Mai", "Juin",
+                        "Juil.", "Août", "Sept.", "Oct.", "Nov.", "Déc."];
+  
+    for (const item of data) {
+      const createdAt = new Date(item.createdAt);
+      const month = monthNames[createdAt.getMonth()];
+      const year = createdAt.getFullYear();
+      const key = `${month} ${year}`;
+  
+      if (grouped[key]) {
+        grouped[key].push(item);
+      } else {
+        grouped[key] = [item];
+      }
+    }
+  
+    return grouped;
   }
 
   /**
@@ -46,7 +72,7 @@ export class SubscriptionController {
   @ApiResponse({type: DocSubscriptionDTO})
   @Get(':id')
   async show(@Param('id', ParseUUIDPipe) id: string) {
-    return this.subscriptionService.fetchOne(id);
+    return SubscriptionFactory.getSubscription(await this.subscriptionService.fetchOne(id));
   }
 
 
