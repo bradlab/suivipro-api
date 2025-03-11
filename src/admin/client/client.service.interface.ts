@@ -30,7 +30,7 @@ export abstract class IClientService {
     withAccess?: boolean,
   ): Promise<Client>;
 
-  abstract bulkAdd(staff: Staff, datas: ICreateClientDTO[]): Promise<Client[]>;
+  abstract bulk(staff: Staff, datas: ICreateClientDTO[]): Promise<Client[]>;
 
   abstract fetchOne(id: string): Promise<Client>;
 
@@ -39,4 +39,6 @@ export abstract class IClientService {
   abstract setState(ids: string[]): Promise<boolean>;
 
   abstract remove(id: string): Promise<boolean>;
+
+  abstract clean(): Promise<boolean>;
 }

@@ -103,7 +103,7 @@ export class ClientService implements IClientService {
     }
   }
 
-  async bulkAdd(staff: Staff, datas: ICreateClientDTO[]): Promise<Client[]> {
+  async bulk(staff: Staff, datas: ICreateClientDTO[]): Promise<Client[]> {
     try {
       // Vérifier si une annonce avec le même titre existe déjà
       const clients: Client[] = [];

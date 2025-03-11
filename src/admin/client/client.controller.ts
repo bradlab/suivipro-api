@@ -149,7 +149,7 @@ export class ClientController {
       @GetClient() client: Staff,
       @Body() datas: ClientAccoutDTO[],
     ) {
-      const prestations = await this.clientService.bulkAdd(client, datas);
+      const prestations = await this.clientService.bulk(client, datas);
       return prestations?.map((prestation) => ClientFactory.getClient(prestation));
     }
 
