@@ -3,13 +3,11 @@ import {
   Column,
   Entity,
   Index,
-  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { ATimestamp } from 'framework/timestamp.abstract';
 import { SexEnum } from 'app/enum';
 import { Staff } from '../model/staff.model';
-import { IPosition } from '../../../_shared/domain/interface';
 
 @Entity('users')
 @Index(['phone'], { unique: true, where: `deleted_at IS NULL` })

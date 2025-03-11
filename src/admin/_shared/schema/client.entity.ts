@@ -7,8 +7,6 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { ATimestamp } from 'framework/timestamp.abstract';
-import { SexEnum } from 'app/enum';
-import { Staff } from '../model/staff.model';
 import { Transaction } from '../model/transaction.model';
 import { TransactionEntity } from './transaction.entity';
 import { ISubscription } from '../model/subscription.model';

@@ -52,6 +52,8 @@ export abstract class ClientFactory {
         fullname: client.fullname,
         address: client.address,
         country: client.country,
+        CNI: client.CNI,
+        NIF: client.NIF,
         logo: DataHelper.getFileLink(client.logo!),
         gps: client.gps,
         subscriptions: deep ? SubscriptionFactory.getSubscriptions(client.subscriptions!) : [],

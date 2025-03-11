@@ -43,16 +43,8 @@ export class SubscriptionService implements ISubscriptionService {
       return await this.dashboardRepository.subscriptions.find({
         relations: { client: true, prestation: true,  },
         where: { ...queryParam },
+        order: { createdAt: 'DESC' }
       });
-      // subscriptions.map((sub) => {
-      //   if (!sub.dueDate) {
-      //     const {from, to} = getIntervalDates(1, true, PeriodUnitEnum.DAY);
-      //     console.log('FROM =========', {from, to})
-      //     sub.dueDate = to;
-      //   }
-      // });
-      // await this.dashboardRepository.subscriptions.updateMany(subscriptions);
-      // return subscriptions;
     } catch (error) {
       this.logger.error(error, 'ERROR::SubscriptionService.fetchAll');
       throw error;
@@ -61,20 +53,6 @@ export class SubscriptionService implements ISubscriptionService {
 
   async add(client: Staff, data: ICreateSubscriptionDTO): Promise<ISubscription> {
     try {
-      // Vérifier si une store avec le même titre existe déjà
-      const { client } = data;
-      // if (!client) {
-      //   throw new NotFoundException('Client not found');
-      // }
-      // data.client = client;
-      // const existingStore = await this.marketRepository.subscriptions.findOne({
-      //   where: { client: { id: client?.id }, name: VLike(data.name) },
-      // });
-
-      // if (existingStore) {
-      //   throw new ConflictException('Store with the same type already exists');
-      // }
-
       return await this.dashboardRepository.subscriptions.create(
         SubscriptionFactory.create(data),
       );

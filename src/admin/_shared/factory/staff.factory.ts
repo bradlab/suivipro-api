@@ -7,24 +7,24 @@ import { IUpdateClientDTO } from 'admin/manager/staff.service.interface';
 
 export abstract class StaffFactory {
   static async create(data: IRegisterClientDTO): Promise<Staff> {
-    const client = new Staff();
-    client.email = data.email;
-    client.phone = data.phone;
-    client.religion = data.religion;
-    client.email = data.email;
-    client.phone = data.phone;
-    client.maritalStatus = data.maritalStatus;
-    client.firstname = data.firstname;
-    client.lastname = data.lastname;
-    client.avatar = data.avatar;
-    client.username = data.username;
-    client.fullname =
+    const user = new Staff();
+    user.email = data.email;
+    user.phone = data.phone;
+    user.religion = data.religion;
+    user.email = data.email;
+    user.phone = data.phone;
+    user.maritalStatus = data.maritalStatus;
+    user.firstname = data.firstname;
+    user.lastname = data.lastname;
+    user.avatar = data.avatar;
+    user.username = data.username;
+    user.fullname =
       data.fullname ?? DataHelper.getFullName(data.firstname, data.lastname);
-    client.address = data.address;
-    client.sex = data.sex;
-    client.country = data.country;
-    client.password = await HashFactory.hashPwd(data.password);
-    return client;
+    user.address = data.address;
+    user.sex = data.sex;
+    user.country = data.country;
+    user.password = await HashFactory.hashPwd(data.password);
+    return user;
   }
 
   static update(client: Staff, data: IUpdateClientDTO, all = false): Staff {

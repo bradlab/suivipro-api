@@ -103,36 +103,36 @@ export class ClientService implements IClientService {
     }
   }
 
-    async bulk(staff: Staff, datas: ICreateClientDTO[]): Promise<Client[]> {
-      try {
-        // Vérifier si une annonce avec le même titre existe déjà
-        const clients: Client[] = [];
-        if (DataHelper.isNotEmptyArray(datas)) {
-          if (!staff) {
-            throw new NotFoundException('Client not found');
-          }
-          for (const data of datas) {
-            const { phone } = data;
-            let queryParam: DeepQueryType<Client> | DeepQueryType<Client>[] = {};
-            if (phone) queryParam = { ...queryParam, phone };
-            const existingAnnonce = await this.dashboardRepository.clients.findOne({
-              where: queryParam,
-            });
-            if(!existingAnnonce) {
-              clients.push(ClientFactory.create(data));
-            }
+  async bulkAdd(staff: Staff, datas: ICreateClientDTO[]): Promise<Client[]> {
+    try {
+      // Vérifier si une annonce avec le même titre existe déjà
+      const clients: Client[] = [];
+      if (DataHelper.isNotEmptyArray(datas)) {
+        if (!staff) {
+          throw new NotFoundException('Client not found');
+        }
+        for (const data of datas) {
+          const { phone } = data;
+          let queryParam: DeepQueryType<Client> | DeepQueryType<Client>[] = {};
+          if (phone) queryParam = { ...queryParam, phone };
+          const existingAnnonce = await this.dashboardRepository.clients.findOne({
+            where: queryParam,
+          });
+          if(!existingAnnonce) {
+            clients.push(ClientFactory.create(data));
           }
         }
-        if (DataHelper.isNotEmptyArray(clients)) {
-  
-          return await this.dashboardRepository.clients.createMany(clients );
-        }
-        return [];
-      } catch (error) {
-        this.logger.error(error, 'ERROR::AnnonceService.add');
-        throw error;
       }
+      if (DataHelper.isNotEmptyArray(clients)) {
+
+        return await this.dashboardRepository.clients.createMany(clients );
+      }
+      return [];
+    } catch (error) {
+      this.logger.error(error, 'ERROR::AnnonceService.add');
+      throw error;
     }
+  }
   
 
   async setState(ids: string[]): Promise<boolean> {
@@ -168,6 +168,7 @@ export class ClientService implements IClientService {
       throw error;
     }
   }
+  
   async clean(): Promise<boolean> {
     try {
       throw new NotImplementedException();
