@@ -43,7 +43,7 @@ export class RegisterStaffDTO extends StaffAccoutDTO {
   password: string;
 }
 
-export class UpdateClientDTO extends PartialType(StaffAccoutDTO) {
+export class UpdateStaffDTO extends PartialType(StaffAccoutDTO) {
   @ApiProperty({
     type: String,
     name: 'id',
@@ -57,7 +57,7 @@ export class UpdateUsernameDTO extends PartialType(
   PickType(StaffAccoutDTO, ['email', 'phone']),
 ) {}
 
-export class ClientQuerDTO implements IClientQuery {
+export class StaffQuerDTO implements IClientQuery {
   @ApiProperty({
     type: String,
     name: 'ids',
