@@ -27,9 +27,9 @@ import { DataGenerator } from 'domain/generator/data.generator';
 import { IDParamDTO, IDsParamDTO } from 'adapter/param.dto';
 import { BaseDashboardMetric, IStaffService } from './staff.service.interface';
 import {
-  ClientQuerDTO,
+  StaffQuerDTO,
   RegisterStaffDTO,
-  UpdateClientDTO,
+  UpdateStaffDTO,
   UpdateUsernameDTO,
 } from './staff.input.dto';
 import { Staff, OStaff } from '../_shared/model/staff.model';
@@ -54,7 +54,7 @@ export class StaffController {
     description: 'Fetch all clients in the DB',
   })
   @ApiResponse({ type: DocStaffDTO, isArray: true })
-  async all(@Query() param: ClientQuerDTO): Promise<OStaff[]> {
+  async all(@Query() param: StaffQuerDTO): Promise<OStaff[]> {
     if (param && typeof param.ids === 'string') {
       const ids: string = param.ids;
       param.ids = ids?.split(',');
@@ -93,7 +93,7 @@ export class StaffController {
     required: false,
   })
   @ApiResponse({ type: DocStaffDTO })
-  async search(@Query() param: ClientQuerDTO): Promise<OStaff | undefined> {
+  async search(@Query() param: StaffQuerDTO): Promise<OStaff | undefined> {
     if (param) {
       return StaffFactory.getClient(
         await this.staffService.search(param, undefined),
@@ -170,11 +170,21 @@ export class StaffController {
   }
 
   @Patch()
-  // @HasPermission(RuleEnum.CAN_UPDATE_CLIENT)
+  @ApiConsumes('multipart/form-data', 'application/json')
+  @UseInterceptors(
+    FileInterceptor('avatar', {
+      storage: diskStorage({
+        destination: BaseConfig.setFilePath,
+        filename: BaseConfig.editFileName,
+      }),
+      fileFilter: BaseConfig.imageFileFilter,
+    }),
+  )
   @ApiOperation({ summary: 'Update client account' })
-  @ApiBody({ type: UpdateClientDTO })
+  @ApiBody({ type: UpdateStaffDTO })
   @ApiResponse({ type: DocStaffDTO })
-  async update(@Body() data: UpdateClientDTO): Promise<OStaff> {
+  async update(@Body() data: UpdateStaffDTO, @UploadedFile() file: any,): Promise<OStaff> {
+    data.avatar = file ? file.filename : undefined;
     return StaffFactory.getClient(await this.staffService.edit(data));
   }
 

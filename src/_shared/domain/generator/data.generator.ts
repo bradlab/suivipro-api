@@ -1,5 +1,5 @@
 export abstract class DataGenerator {
-  static randomString(size = 8): string {
+  static randomString(size = 12): string {
     let str = '';
     const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
     for (let i = 0; i < size; i++) {
