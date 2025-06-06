@@ -170,11 +170,20 @@ export class StaffController {
   }
 
   @Patch()
-  // @HasPermission(RuleEnum.CAN_UPDATE_CLIENT)
+  @UseInterceptors(
+    FileInterceptor('avatar', {
+      storage: diskStorage({
+        destination: BaseConfig.setFilePath,
+        filename: BaseConfig.editFileName,
+      }),
+      fileFilter: BaseConfig.imageFileFilter,
+    }),
+  )
   @ApiOperation({ summary: 'Update client account' })
   @ApiBody({ type: UpdateClientDTO })
   @ApiResponse({ type: DocStaffDTO })
-  async update(@Body() data: UpdateClientDTO): Promise<OStaff> {
+  async update(@Body() data: UpdateClientDTO, @UploadedFile() file: any,): Promise<OStaff> {
+    data.avatar = file ? file.filename : undefined;
     return StaffFactory.getClient(await this.staffService.edit(data));
   }
 
